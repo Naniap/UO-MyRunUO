@@ -41,6 +41,7 @@ echo <<<EOF
 </head>
 <body>
 EOF;
+$link = sql_connect();
 $result = sql_query($link, "SELECT SERIAL, accounts.accounts.id, lastlogin, myrunuo_characters.char_id, accounts.characters.id FROM accounts.characters, accounts.accounts, myrunuo.myrunuo_characters WHERE accounts.characters.id = accounts.accounts.id AND SERIAL = myrunuo_characters.char_id AND myrunuo_characters.char_id=$id");
 if (!(list($serial, $charid, $lastlogin) = mysql_fetch_row($result))) {
 }
@@ -51,7 +52,7 @@ else
 $lastonline = "<tr><td><label for=\"name-value\">Last Login:</label></td><td id=\"name-value\" align=\"right\">$dt</td></tr>";
 
 mysql_free_result($result);
-$link = sql_connect();
+
 
 $gid1 = sql_query($link, "SELECT myrunuo_guilds.guild_id,myrunuo_guilds.guild_name, myrunuo_characters.char_guildtitle FROM myrunuo_characters INNER JOIN myrunuo_guilds ON myrunuo_characters.char_guild=myrunuo_guilds.guild_id WHERE myrunuo_characters.char_id=$id");
 if (list($gid, $guild, $guildtitle) = mysql_fetch_row($gid1))
@@ -90,9 +91,10 @@ if ($id) {
 		$faction = "Council Of Mages";
 	else
 		$faction = "";
-
+	$isfaction = "";
 	if ($fac >= 1)
 		$isfaction = "Faction";
+
 
 	$factions = "<tr><td><label for=\"name-value\">$isfaction</label></td><td id=\"name-value\" align=\"right\">$faction</td></tr>";
 
