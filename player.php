@@ -2,17 +2,6 @@
 
 require("myrunuo.inc.php");
 
-/*function skillimage($skillid, $skill)
-{
-  if ($skill / 10 >= 100)
-    $temp = "g";
-  else
-    $temp = "";
-  $skillimage = "images/skills/{$skillid}{$temp}.gif";
-
-  return $skillimage;
-}*/
-
 function skillname($skillid, $skill) {
 	global $skillnames;
 
