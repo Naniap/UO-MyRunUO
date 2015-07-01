@@ -2,27 +2,27 @@
 
 require("myrunuo.inc.php");
 
-    $link = sql_connect();     
-    
-      $result = sql_query($link, "SELECT update_time
+$link = sql_connect();
+
+$result = sql_query($link, "SELECT update_time
 FROM information_schema.tables
 WHERE TABLE_SCHEMA = 'myrunuo2' AND TABLE_NAME = 'myrunuo_statistics' AND update_time > (NOW() - INTERVAL 5 MINUTE);");
-      if (!(list($tableuptime) = mysql_fetch_row($result)))
-      mysql_free_result($result);
-      $currentDate = strtotime($tableuptime);
-      $futureDate = $currentDate+(70*5);
-      $formatDate = date("Y-m-d H:i:s", $futureDate);
-      if (date("Y-m-d H:i:s") > $formatDate)
-        $uptime = "The server is currently down.";
-	$result = sql_query($link, "SELECT time_datetime FROM myrunuo_timestamps WHERE time_type='Status'");
-	if (!(list($timestamp) = mysql_fetch_row($result)))
-  	$timestamp = "";
+if (!(list($tableuptime) = mysql_fetch_row($result)))
 	mysql_free_result($result);
+$currentDate = strtotime($tableuptime);
+$futureDate = $currentDate + (70 * 5);
+$formatDate = date("Y-m-d H:i:s", $futureDate);
+if (date("Y-m-d H:i:s") > $formatDate)
+	$uptime = "The server is currently down.";
+$result = sql_query($link, "SELECT time_datetime FROM myrunuo_timestamps WHERE time_type='Status'");
+if (!(list($timestamp) = mysql_fetch_row($result)))
+	$timestamp = "";
+mysql_free_result($result);
 
 if ($timestamp != "")
-  $dt = date("F j, Y, g:i a", strtotime($timestamp));
+	$dt = date("F j, Y, g:i a", strtotime($timestamp));
 else
-  $dt = date("F j, Y, g:i a");
+	$dt = date("F j, Y, g:i a");
 
 echo <<<EOF
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
@@ -50,7 +50,7 @@ function showHide(div){
 </script>
 <div align="center"> 
  
-<div id="banner"><img src="../images/banner.jpg"></div> 
+<div id="banner"><img src="./images/banner.jpg"></div>
 <div id="container"> 
 <div id="main"> 
 	<div id="sideNavi"> 
@@ -58,15 +58,12 @@ function showHide(div){
 <ul> 
 	<li class="navigation"><a href="index.php">Statistics</a> 
 		<ul> 
-			<!--<li class="navigation"><a href="/factions/">Factions</a></li> -->
-                     <li class="navigation"><a href="status.php">Online Players</a></li>
+			<li class="navigation"><a href="status.php">Online Players</a></li>
 			<li class="navigation"><a href="players.php">Players</a></li> 
 			<li class="navigation"><a href="guilds.php">Guilds</a></li> 
 			<li class="navigation"><a href="dueling.php">Dueling</a></li>
 			<li class="navigation"><a href="bounties.php?sortby=Bounty&flip=1">Bounties</a></li>
 			<li class="navigation"><a href="bulletinboard.php">Bulletin Posts</a></li>
-			<!--<li class="navigation"><a href="http://videos.uogamers.com/">Videos</a></li>
-			<li class="navigation"><a href="http://poker.uogamers.com/">Poker</a></li> --> 
 		</ul> 
 		</ul> 
 	</li> 
@@ -101,15 +98,14 @@ function showHide(div){
 		<td class="section-ml"></td> 
 		<td class="section-mm">
 EOF;
-      $counter = 0;
-      $result = sql_query($link, "SELECT poster, subject, time, postlines, thread, replythread FROM myrunuo_bulletinmessages"); //Retrieves information on Items
-	 while ((list($poster,$subject,$time,$postlines,$thread,$replythread) = mysql_fetch_row($result)))
-      {
-     if ($time != "")
-  $dt2 = date("F j, Y, g:i a", strtotime($time));
-else
-  $dt2 = date("F j, Y, g:i a");
-echo<<<EOF
+$counter = 0;
+$result = sql_query($link, "SELECT poster, subject, time, postlines, thread, replythread FROM myrunuo_bulletinmessages"); //Retrieves information on Items
+while ((list($poster, $subject, $time, $postlines, $thread, $replythread) = mysql_fetch_row($result))) {
+	if ($time != "")
+		$dt2 = date("F j, Y, g:i a", strtotime($time));
+	else
+		$dt2 = date("F j, Y, g:i a");
+	echo <<<EOF
 
 <h2>
 <a href="#" onclick="showHide('eventbody-$counter');">$subject by $poster ($dt2)</a></h2>
@@ -118,12 +114,12 @@ echo<<<EOF
 
  
 EOF;
-$counter++;
+	$counter++;
 }
-      mysql_free_result($result);
+mysql_free_result($result);
 mysql_close($link);
 
-echo<<<EOF
+echo <<<EOF
 <font face="Verdana" color="#000000" size="-1"><b>Last Updated:</b> $dt</font>
 	
 </td> 

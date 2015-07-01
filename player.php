@@ -13,17 +13,17 @@ require("myrunuo.inc.php");
   return $skillimage;
 }*/
 
-function skillname($skillid, $skill)
-{
-  global $skillnames;
+function skillname($skillid, $skill) {
+	global $skillnames;
 
-  if ($skill / 10 >= 100)
-    $temp = "Grandmaster:<br>";
-  else
-    $temp = "";
-  $skillname = /*$temp .*/ $skillnames[$skillid];
+	if ($skill / 10 >= 100)
+		$temp = "Grandmaster:<br>";
+	else
+		$temp = "";
+	$skillname = /*$temp .*/
+		$skillnames[$skillid];
 
-  return $skillname;
+	return $skillname;
 }
 
 check_get($id, "id");
@@ -41,115 +41,110 @@ echo <<<EOF
 </head>
 <body>
 EOF;
-$link2 = sql_connectDB("accounts");
-$result = sql_query($link2, "SELECT SERIAL, accounts.accounts.id, lastlogin, myrunuo_characters.char_id, accounts.characters.id FROM accounts.characters, accounts.accounts, myrunuo.myrunuo_characters WHERE accounts.characters.id = accounts.accounts.id AND SERIAL = myrunuo_characters.char_id AND myrunuo_characters.char_id=$id");
-  if (!(list($serial,$charid,$lastlogin) = mysql_fetch_row($result))) {
-	  }
+$result = sql_query($link, "SELECT SERIAL, accounts.accounts.id, lastlogin, myrunuo_characters.char_id, accounts.characters.id FROM accounts.characters, accounts.accounts, myrunuo.myrunuo_characters WHERE accounts.characters.id = accounts.accounts.id AND SERIAL = myrunuo_characters.char_id AND myrunuo_characters.char_id=$id");
+if (!(list($serial, $charid, $lastlogin) = mysql_fetch_row($result))) {
+}
 if ($lastlogin != "")
-  $dt = date("F j, Y, g:i a", strtotime($lastlogin));
+	$dt = date("F j, Y, g:i a", strtotime($lastlogin));
 else
-  $dt = date("F j, Y, g:i a");
+	$dt = date("F j, Y, g:i a");
 $lastonline = "<tr><td><label for=\"name-value\">Last Login:</label></td><td id=\"name-value\" align=\"right\">$dt</td></tr>";
 
-mysql_free_result($result);  
-mysql_close($link2);
+mysql_free_result($result);
 $link = sql_connect();
 
- $gid1 = sql_query($link, "SELECT myrunuo_guilds.guild_id,myrunuo_guilds.guild_name, myrunuo_characters.char_guildtitle FROM myrunuo_characters INNER JOIN myrunuo_guilds ON myrunuo_characters.char_guild=myrunuo_guilds.guild_id WHERE myrunuo_characters.char_id=$id");
-  if (list($gid,$guild,$guildtitle) = mysql_fetch_row($gid1)) 
-    $gid = intval($gid);
+$gid1 = sql_query($link, "SELECT myrunuo_guilds.guild_id,myrunuo_guilds.guild_name, myrunuo_characters.char_guildtitle FROM myrunuo_characters INNER JOIN myrunuo_guilds ON myrunuo_characters.char_guild=myrunuo_guilds.guild_id WHERE myrunuo_characters.char_id=$id");
+if (list($gid, $guild, $guildtitle) = mysql_fetch_row($gid1))
+	$gid = intval($gid);
 
 if ($id) {
-  $result = sql_query($link, "SELECT char_name,char_nototitle,char_female,char_counts,char_str,char_dex,char_int,char_public,char_faction,char_skillsum,char_statsum,rank,level,wins,losses,accesslevel FROM myrunuo_characters WHERE char_id=$id");
-  if (!(list($charname,$chartitle,$sex,$kills,$str,$dex,$int,$public,$fac,$skillsum,$statsum,$rank,$level,$wins,$losses,$acclvl) = mysql_fetch_row($result))) {
-    //echo "Invalid character ID!\n";
-    $charname = "Invalid character!";
-    //die();
-  }
-  mysql_free_result($result);  
-  
-  $skillsum = number_format($skillsum/10, 1,".", "");
+	$result = sql_query($link, "SELECT char_name,char_nototitle,char_female,char_counts,char_str,char_dex,char_int,char_public,char_faction,char_skillsum,char_statsum,rank,level,wins,losses,accesslevel FROM myrunuo_characters WHERE char_id=$id");
+	if (!(list($charname, $chartitle, $sex, $kills, $str, $dex, $int, $public, $fac, $skillsum, $statsum, $rank, $level, $wins, $losses, $acclvl) = mysql_fetch_row($result))) {
+		//echo "Invalid character ID!\n";
+		$charname = "Invalid character!";
+		exit;
+	}
+	mysql_free_result($result);
 
-  if ( $public == 1 )
-     $strng = "Yes.";
-  else
-     $strng = "No.";
-  if ($acclvl == 4)
-     $accesslevel = "Administrator";
-  else if ($acclvl == 3)
-     $accesslevel = "Seer";
-  else if ($acclvl == 2)
-     $accesslevel = "Game Master";
-  else if ($acclvl == 1)
-     $accesslevel = "Counselor";
-  if ( $fac == 1 )
-    $faction = "Minax";
-  else if ( $fac == 2 )
-    $faction = "Shadowlords";
-  else if ( $fac == 3 )
-    $faction = "True Britannians";
-  else if ( $fac == 4 )
-    $faction = "Council Of Mages";
-  else 
-    $faction = "";
+	$skillsum = number_format($skillsum / 10, 1, ".", "");
 
-  if ( $fac >= 1 )
-     $isfaction = "Faction"; 
+	if ($public == 1)
+		$strng = "Yes.";
+	else
+		$strng = "No.";
+	if ($acclvl == 4)
+		$accesslevel = "Administrator";
+	else if ($acclvl == 3)
+		$accesslevel = "Seer";
+	else if ($acclvl == 2)
+		$accesslevel = "Game Master";
+	else if ($acclvl == 1)
+		$accesslevel = "Counselor";
+	if ($fac == 1)
+		$faction = "Minax";
+	else if ($fac == 2)
+		$faction = "Shadowlords";
+	else if ($fac == 3)
+		$faction = "True Britannians";
+	else if ($fac == 4)
+		$faction = "Council Of Mages";
+	else
+		$faction = "";
 
-  $factions = "<tr><td><label for=\"name-value\">$isfaction</label></td><td id=\"name-value\" align=\"right\">$faction</td></tr>";
+	if ($fac >= 1)
+		$isfaction = "Faction";
 
-  if ( $sex == 1 )
-    $sex1 = "her";
-  else 
-    $sex1 = "his";
+	$factions = "<tr><td><label for=\"name-value\">$isfaction</label></td><td id=\"name-value\" align=\"right\">$faction</td></tr>";
 
-  if ( $acclvl > 0 )
-     $showacclvl = "<tr><td><label for=\"name-value\">Staff Position:</label></td><td id=\"name-value\" align=\"right\">$accesslevel</td></tr>";
-  if ( $guild != ("" || NULL) )
-  {
-     $gid1 = "<a href=guild.php?id=$gid>$guild</a>";
-     $guild = "<tr><td><label for=\"name-value\">Guild:</label></td><td id=\"name-value\" align=\"right\">$gid1</td></tr>";
-  }
-  if ( $guildtitle != ("" || NULL) )
-  {
-     $guildtitle = "<tr><td><label for=\"name-value\">Guild Title:</label></td><td id=\"name-value\" align=\"right\">$guildtitle</td></tr>";
-  }
-  function addOrdinalNumberSuffix($num) {
-    if (!in_array(($num % 100),array(11,12,13))){
-      switch ($num % 10) {
-        // Handle 1st, 2nd, 3rd
-        case 1:  return $num.'st';
-        case 2:  return $num.'nd';
-        case 3:  return $num.'rd';
-      }
-    }
-    return $num.'th';
-  }
-  $ordinalrank = addOrdinalNumberSuffix($rank);
+	if ($sex == 1)
+		$sex1 = "her";
+	else
+		$sex1 = "his";
 
-if ( $public == 1 )
-{
-  echo <<<EOF
+	if ($acclvl > 0)
+		$showacclvl = "<tr><td><label for=\"name-value\">Staff Position:</label></td><td id=\"name-value\" align=\"right\">$accesslevel</td></tr>";
+	if ($guild != ("" || NULL)) {
+		$gid1 = "<a href=guild.php?id=$gid>$guild</a>";
+		$guild = "<tr><td><label for=\"name-value\">Guild:</label></td><td id=\"name-value\" align=\"right\">$gid1</td></tr>";
+	}
+	if ($guildtitle != ("" || NULL)) {
+		$guildtitle = "<tr><td><label for=\"name-value\">Guild Title:</label></td><td id=\"name-value\" align=\"right\">$guildtitle</td></tr>";
+	}
+	function addOrdinalNumberSuffix($num) {
+		if (!in_array(($num % 100), array(11, 12, 13))) {
+			switch ($num % 10) {
+				// Handle 1st, 2nd, 3rd
+				case 1:
+					return $num . 'st';
+				case 2:
+					return $num . 'nd';
+				case 3:
+					return $num . 'rd';
+			}
+		}
+		return $num . 'th';
+	}
+
+	$ordinalrank = addOrdinalNumberSuffix($rank);
+
+	if ($public == 1) {
+		echo <<<EOF
 <div align="center"> 
  
-<div id="banner"><img src="../images/banner.jpg"></div> 
+<div id="banner"><img src="./images/banner.jpg"></div>
 <div id="container"> 
 <div id="main"> 
 	<div id="sideNavi"> 
 	  <div class="remote"> 
 <ul> 
 	<li class="navigation"><a href="index.php">Statistics</a> 
-		<ul> 
-			<!--<li class="navigation"><a href="/factions/">Factions</a></li> -->
-                     <li class="navigation"><a href="status.php">Online Players</a></li>
+		<ul>
+            			<li class="navigation"><a href="status.php">Online Players</a></li>
 			<li class="navigation"><a href="players.php">Players</a></li> 
 			<li class="navigation"><a href="guilds.php">Guilds</a></li> 
 			<li class="navigation"><a href="dueling.php">Dueling</a></li>
 			<li class="navigation"><a href="bounties.php?sortby=Bounty&flip=1">Bounties</a></li>
-			<li class="navigation"><a href="bulletinboard.php">Bulletin Posts</a></li>
-			<!--<li class="navigation"><a href="http://videos.uogamers.com/">Videos</a></li>
-			<li class="navigation"><a href="http://poker.uogamers.com/">Poker</a></li> --> 
-		</ul> 
+			<li class="navigation"><a href="bulletinboard.php">Bulletin Posts</a></li>		</ul>
 		</ul> 
 	</li> 
 </ul> 
@@ -225,12 +220,11 @@ if ( $public == 1 )
 
 
 EOF;
-}
-else
-echo <<<html
+	} else
+		echo <<<html
 <div align="center"> 
  
-<div id="banner"><img src="../images/banner.jpg"></div> 
+<div id="banner"><img src="./images/banner.jpg"></div>
 <div id="container"> 
 <div id="main"> 
 	<div id="sideNavi"> 
@@ -238,15 +232,12 @@ echo <<<html
 <ul> 
 	<li class="navigation"><a href="index.php">Statistics</a> 
 		<ul> 
-			<!--<li class="navigation"><a href="/factions/">Factions</a></li> -->
-                     <li class="navigation"><a href="status.php">Online Players</a></li>
+			<li class="navigation"><a href="status.php">Online Players</a></li>
 			<li class="navigation"><a href="players.php">Players</a></li> 
 			<li class="navigation"><a href="guilds.php">Guilds</a></li> 
 			<li class="navigation"><a href="dueling.php">Dueling</a></li>
 			<li class="navigation"><a href="bounties.php?sortby=Bounty&flip=1">Bounties</a></li>
 			<li class="navigation"><a href="bulletinboard.php">Bulletin Posts</a></li>
-			<!--<li class="navigation"><a href="http://videos.uogamers.com/">Videos</a></li>
-			<li class="navigation"><a href="http://poker.uogamers.com/">Poker</a></li> --> 
 		</ul> 
 	</li> 
 </ul> 
@@ -307,29 +298,26 @@ echo <<<html
 							 
 							<table cellpadding="3" cellspacing="1" width="100%"> 
 html;
-if ($public == 1)
-{
-  $result = sql_query($link, "SELECT skill_id,skill_value FROM myrunuo_characters_skills WHERE char_id=$id ORDER BY skill_value DESC LIMIT 54");
-  $num = 0;
-  $skillsum = 0;
-  while ((list($skillid,$skill) = mysql_fetch_row($result)) && $skillsum <= 600) 
-  {
-    $skillid = intval($skillid);
-    $skill = intval($skill);
-    $name = skillname($skillid, $skill);
+	if ($public == 1) {
+		$result = sql_query($link, "SELECT skill_id,skill_value FROM myrunuo_characters_skills WHERE char_id=$id ORDER BY skill_value DESC LIMIT 54");
+		$num = 0;
+		$skillsum = 0;
+		while ((list($skillid, $skill) = mysql_fetch_row($result)) && $skillsum <= 600) {
+			$skillid = intval($skillid);
+			$skill = intval($skill);
+			$name = skillname($skillid, $skill);
 
-    // Fix for swapped skill IDs
-    if ($skillid == 47)
-      $skillid = 48;
-    else if ($skillid == 48)
-      $skillid = 47;
+			// Fix for swapped skill IDs
+			if ($skillid == 47)
+				$skillid = 48;
+			else if ($skillid == 48)
+				$skillid = 47;
 
 
-	
-    //$image = skillimage($skillid, $skill);
-    $skill = number_format($skill/10, 1,".", "");
+			//$image = skillimage($skillid, $skill);
+			$skill = number_format($skill / 10, 1, ".", "");
 
-    echo <<<EOF
+			echo <<<EOF
     <tr><td><label for="skill-value-$num">$name</label></td><td id="skill-value-$num" align="right">$skill</td></tr>
      <!-- <td align="center" valign="top">
 	 <table><font face="Arial" size="2">$name: $skill</font></table>
@@ -337,14 +325,13 @@ if ($public == 1)
 
 EOF;
 
-    $skillsum += $skill;
-    $num++;
-  }
-  mysql_free_result($result);
-}
-else
-echo "";
-echo <<<html
+			$skillsum += $skill;
+			$num++;
+		}
+		mysql_free_result($result);
+	} else
+		echo "";
+	echo <<<html
 								<!--<tr> 
 									<td><label for="skill-value-1">$name</label></td> 
 									<td id="skill-value" align="right">$skill</td> 
@@ -494,16 +481,16 @@ echo <<<html
 </div> 
 html;
 
-  while ($num < 3) {
-    echo "    <td>&nbsp;</td>\n";
-    $num++;
-  }
+	while ($num < 3) {
+		echo "    <td>&nbsp;</td>\n";
+		$num++;
+	}
 
-  echo "  </tr>\n"; 
- /*$result = sql_query($link, "SELECT myrunuo_guilds.guild_id,myrunuo_guilds.guild_name FROM myrunuo_characters INNER JOIN myrunuo_guilds ON myrunuo_characters.char_guild=myrunuo_guilds.guild_id WHERE myrunuo_characters.char_id=$id");
-  if (list($gid,$guild) = mysql_fetch_row($result)) {
-    $gid = intval($gid);*/
-    echo <<<EOF
+	echo "  </tr>\n";
+	/*$result = sql_query($link, "SELECT myrunuo_guilds.guild_id,myrunuo_guilds.guild_name FROM myrunuo_characters INNER JOIN myrunuo_guilds ON myrunuo_characters.char_guild=myrunuo_guilds.guild_id WHERE myrunuo_characters.char_id=$id");
+	  if (list($gid,$guild) = mysql_fetch_row($result)) {
+		$gid = intval($gid);*/
+	echo <<<EOF
 <!--  <tr>
     <td align="center" colspan="3">
       <br><font face="Verdana, Arial" color="#000000" size="2"><b>Guild:</b> &nbsp; &nbsp;<a href="guild.php?id=$gid" style="color: Black">$guild</a></font>

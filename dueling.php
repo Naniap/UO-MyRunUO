@@ -7,33 +7,33 @@ $tp = intval($tp);
 
 check_get($flip, "flip");
 if ($flip)
-  $sw = "desc";
+	$sw = "desc";
 else
-  $sw = "";
+	$sw = "";
 
 check_get($sortby, "sortby");
 $s = $sortby;
 switch (strtolower($s)) {
-  case "name":
-    $sortby = "char_name";
-    break;
-  case "rank":
-    $sortby = "rank";
-    break;
-  case "level":
-    $sortby = "level";
-    break;
-  case "wins":
-    $sortby = "wins";
-    break;
-  case "losses":
-    $sortby = "losses";
-    break;
-  case "guild":
-    $sortby = "char_guild";
-    break;
-  default: // name
-    $sortby = "rank";
+	case "name":
+		$sortby = "char_name";
+		break;
+	case "rank":
+		$sortby = "rank";
+		break;
+	case "level":
+		$sortby = "level";
+		break;
+	case "wins":
+		$sortby = "wins";
+		break;
+	case "losses":
+		$sortby = "losses";
+		break;
+	case "guild":
+		$sortby = "char_guild";
+		break;
+	default: // name
+		$sortby = "rank";
 }
 
 $link = sql_connect();
@@ -41,29 +41,29 @@ $link = sql_connect();
 // Status timestamp
 $result = sql_query($link, "SELECT time_datetime FROM myrunuo_timestamps WHERE time_type='Char'");
 if (!(list($timestamp) = mysql_fetch_row($result)))
-  $timestamp = "";
+	$timestamp = "";
 mysql_free_result($result);
 
 $nflip = $cflip = $kflip = $fflip = $lflip = $gflip = 0;
 if (!$flip) {
-  if ($sortby == "char_name")
-    $nflip = 1;
-  else if ($sortby == "rank")
-    $cflip = 1;
-  else if ($sortby == "level")
-    $kflip = 1;
-  else if ($sortby == "wins")
-    $fflip = 1;
-  else if ($sortby == "losses")
-    $lflip = 1;
-  else if ($sortby == "guild")
-    $gflip = 1;
+	if ($sortby == "char_name")
+		$nflip = 1;
+	else if ($sortby == "rank")
+		$cflip = 1;
+	else if ($sortby == "level")
+		$kflip = 1;
+	else if ($sortby == "wins")
+		$fflip = 1;
+	else if ($sortby == "losses")
+		$lflip = 1;
+	else if ($sortby == "guild")
+		$gflip = 1;
 }
 // Get total online player count
 $result = sql_query($link, "SELECT COUNT(*) FROM myrunuo_characters");
 if (!$result) {
-  echo "Database error.<br>\n";
-  exit;
+	echo "Database error.<br>\n";
+	exit;
 }
 list($totalplayers) = mysql_fetch_row($result);
 mysql_free_result($result);
@@ -93,24 +93,20 @@ echo <<<EOF
 <body> 
 <div align="center"> 
  
-<div id="banner"><img src="../images/banner.jpg" alt="" /></div> 
+<div id="banner"><img src="./images/banner.jpg" alt="" /></div>
 <div id="container"> 
 <div id="main"> 
 	<div id="sideNavi"> 
 	  <div class="remote"> 
 <ul> 
 	<li class="navigation"><a href="index.php">Statistics</a> 
-		<ul> 
-			<!--<li class="navigation"><a href="/factions/">Factions</a></li> -->
-                     <li class="navigation"><a href="status.php">Online Players</a></li>
+		<ul>
+            			<li class="navigation"><a href="status.php">Online Players</a></li>
 			<li class="navigation"><a href="players.php">Players</a></li> 
 			<li class="navigation"><a href="guilds.php">Guilds</a></li> 
 			<li class="navigation"><a href="dueling.php">Dueling</a></li>
 			<li class="navigation"><a href="bounties.php?sortby=Bounty&flip=1">Bounties</a></li>
-			<li class="navigation"><a href="bulletinboard.php">Bulletin Posts</a></li>
-			<!--<li class="navigation"><a href="http://videos.uogamers.com/">Videos</a></li>
-			<li class="navigation"><a href="http://poker.uogamers.com/">Poker</a></li> --> 
-		</ul> 
+			<li class="navigation"><a href="bulletinboard.php">Bulletin Posts</a></li>		</ul>
 		</ul> 
 	</li> 
 </ul> 
@@ -179,20 +175,19 @@ echo <<<EOF
 EOF;
 
 if ($tp - $status_perpage >= 0) {
-  $num = $tp - $status_perpage;
-  echo "        <a href=\"dueling.php?tp=$num&sortby=$s\"><img src=\"images/items/back.jpg\" border=\"0\"></a>\n";
-}
-else
-  //echo "        &nbsp; &nbsp;";
+	$num = $tp - $status_perpage;
+	echo "        <a href=\"dueling.php?tp=$num&sortby=$s\"><img src=\"images/items/back.jpg\" border=\"0\"></a>\n";
+} else
+	//echo "        &nbsp; &nbsp;";
 
-$page = intval($tp / $status_perpage) + 1;
+	$page = intval($tp / $status_perpage) + 1;
 $pages = ceil($totalplayers / $status_perpage);
 if ($pages > 1)
-  echo " <font size=\"-1\" face=\"Verdana\">Page [$page/$pages]</font> ";
+	echo " <font size=\"-1\" face=\"Verdana\">Page [$page/$pages]</font> ";
 
 if ($tp + $status_perpage < $totalplayers) {
-  $num = $tp + $status_perpage;
-  echo "        <a href=\"dueling.php?tp=$num&sortby=$s\"><img src=\"images/items/next.jpg\" border=\"0\"></a>\n";
+	$num = $tp + $status_perpage;
+	echo "        <a href=\"dueling.php?tp=$num&sortby=$s\"><img src=\"images/items/next.jpg\" border=\"0\"></a>\n";
 }
 
 echo <<<EOF
@@ -202,38 +197,42 @@ echo <<<EOF
 EOF;
 
 $num = 0;
-  function addOrdinalNumberSuffix($num) {
-    if (!in_array(($num % 100),array(11,12,13))){
-      switch ($num % 10) {
-        // Handle 1st, 2nd, 3rd
-        case 1:  return $num.'st';
-        case 2:  return $num.'nd';
-        case 3:  return $num.'rd';
-      }
-    }
-    return $num.'th';
-  }
+function addOrdinalNumberSuffix($num) {
+	if (!in_array(($num % 100), array(11, 12, 13))) {
+		switch ($num % 10) {
+			// Handle 1st, 2nd, 3rd
+			case 1:
+				return $num . 'st';
+			case 2:
+				return $num . 'nd';
+			case 3:
+				return $num . 'rd';
+		}
+	}
+	return $num . 'th';
+}
+
 if ($totalplayers) {
-  while ($row = mysql_fetch_row($result)) {
-    $charname = $row[0];
-    $rank = $row[1];
-    $level = $row[2];
-    $wins = $row[3];
-    $losses = $row[4];
-    $id = $row[5];
-    $guildid = $row[6];
-    $guild = $row[7];
+	while ($row = mysql_fetch_row($result)) {
+		$charname = $row[0];
+		$rank = $row[1];
+		$level = $row[2];
+		$wins = $row[3];
+		$losses = $row[4];
+		$id = $row[5];
+		$guildid = $row[6];
+		$guild = $row[7];
 
 
-    if ($guildid >= 1 && $guild == "")
-       $guild = "[none]";
-    else if ($guildid >= 1)
-       $guild = "[".$guild."]";
+		if ($guildid >= 1 && $guild == "")
+			$guild = "[none]";
+		else if ($guildid >= 1)
+			$guild = "[" . $guild . "]";
 
-	$ordinalrank = addOrdinalNumberSuffix($rank);
+		$ordinalrank = addOrdinalNumberSuffix($rank);
 
-    if ($charname != "") {
-      echo <<<EOF
+		if ($charname != "") {
+			echo <<<EOF
   <tr>
     <td>
       <font face="Verdana" size="2">$ordinalrank</font>
@@ -256,13 +255,13 @@ if ($totalplayers) {
   </tr>
 
 EOF;
-      $num++;
-    }
-  }
+			$num++;
+		}
+	}
 }
 
 if (!$num) {
-  echo <<<EOF
+	echo <<<EOF
   <tr>
     <td colspan="5">
       <font face="Verdana" size="2">There are no players online.</font>
@@ -276,9 +275,9 @@ mysql_free_result($result);
 mysql_close($link);
 
 if ($timestamp != "")
-  $dt = date("F j, Y, g:i a", strtotime($timestamp));
+	$dt = date("F j, Y, g:i a", strtotime($timestamp));
 else
-  $dt = date("F j, Y, g:i a");
+	$dt = date("F j, Y, g:i a");
 
 echo <<<EOF
   <tr>

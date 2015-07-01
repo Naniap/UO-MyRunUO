@@ -1,248 +1,246 @@
-body{
-	background-color:black;
-	margin: 0px;
+body {
+    background-color: black;
+    margin: 0px;
 }
 
-#container{
-	width: 995px;
+#container {
+    width: 995px;
 }
 
-#main{
-	background-image:url('http://my.uoreplay.com/images/content_bg.jpg');
-	background-repeat:repeat-y;
-	background-position: center;
-	float: left;
-	padding: 0px 0px 10px 0px;
-	margin: 0px 0px 0px 0px;
-	text-align: left;
-	width: 995px;
+#main {
+    background-image: url('http://my.uoreplay.com/images/content_bg.jpg');
+    background-repeat: repeat-y;
+    background-position: center;
+    float: left;
+    padding: 0px 0px 10px 0px;
+    margin: 0px 0px 0px 0px;
+    text-align: left;
+    width: 995px;
 }
 
-#content, #headlines, .content{
-	margin: 0px 5px 0px 213px;
+#content, #headlines, .content {
+    margin: 0px 5px 0px 213px;
 
 }
 
 .divider {
-	border-bottom: 1px dotted #92968A;
-	color: #323217;
-	font-family: Georgia, Arial, Helvetica, sans-serif;
-	font-size: 18px;
-	padding: 0px 0px 0px 0px;
-	margin: 0px 0px 30px 0px;
-	letter-spacing: -1px;
+    border-bottom: 1px dotted #92968A;
+    color: #323217;
+    font-family: Georgia, Arial, Helvetica, sans-serif;
+    font-size: 18px;
+    padding: 0px 0px 0px 0px;
+    margin: 0px 0px 30px 0px;
+    letter-spacing: -1px;
 }
 
 .drop_down {
-	background-image:url('http://my.uoreplay.com/images/dropdown_bg.gif');
-	background-repeat: no-repeat;
-	color: #555555;
-	font-family: Georgia, Arial, Helvetica, sans-serif;
-	font-size: 18px;
-	padding: 20px 0px 0px 0px;
-	margin: 0px 0px 0px 0px;
-	text-align: center;
-	width: 233px;
-	height: 64px;
+    background-image: url('http://my.uoreplay.com/images/dropdown_bg.gif');
+    background-repeat: no-repeat;
+    color: #555555;
+    font-family: Georgia, Arial, Helvetica, sans-serif;
+    font-size: 18px;
+    padding: 20px 0px 0px 0px;
+    margin: 0px 0px 0px 0px;
+    text-align: center;
+    width: 233px;
+    height: 64px;
 }
 
 #contentText, .contentText {
-	background-image:url('http://my.uoreplay.com/images/content_text_bg.jpg');
-	background-repeat: repeat-y;
-	background-position: center;
-	font-family: Georgia, Arial, Helvetica, sans-serif;
-	font-size: 14px;
-	font-weight: normal;
-	margin: 0px 0px 0px 0px;
-	width: 752px;
+    background-image: url('http://my.uoreplay.com/images/content_text_bg.jpg');
+    background-repeat: repeat-y;
+    background-position: center;
+    font-family: Georgia, Arial, Helvetica, sans-serif;
+    font-size: 14px;
+    font-weight: normal;
+    margin: 0px 0px 0px 0px;
+    width: 752px;
 }
 
 .headlinesStyle {
-	font-family: Georgia, Arial, Helvetica, sans-serif;
-	font-size: 11px;
-	font-weight: normal;
-	margin: 5px 35px 0px 0px;
-	text-align: left;
+    font-family: Georgia, Arial, Helvetica, sans-serif;
+    font-size: 11px;
+    font-weight: normal;
+    margin: 5px 35px 0px 0px;
+    text-align: left;
 }
 
-.text{
-	color: #323217;
-	line-height: 22px;
-	padding: 0px 25px 0px 25px;
-	width: 702px;
+.text {
+    color: #323217;
+    line-height: 22px;
+    padding: 0px 25px 0px 25px;
+    width: 702px;
 }
 
-
-.title{
-	border-bottom: 1px dotted #92968A;
-	color: #323217;
-	font-family: Georgia, Arial, Helvetica, sans-serif;
-	font-size: 18px;
-	padding: 10px 0px 0px 0px;
-	margin: 0px 0px 10px 0px;
-	letter-spacing: -1px;
+.title {
+    border-bottom: 1px dotted #92968A;
+    color: #323217;
+    font-family: Georgia, Arial, Helvetica, sans-serif;
+    font-size: 18px;
+    padding: 10px 0px 0px 0px;
+    margin: 0px 0px 10px 0px;
+    letter-spacing: -1px;
 }
 
-.specialText{
-line-height: 25px;
-text-align: center;
+.specialText {
+    line-height: 25px;
+    text-align: center;
 }
 
-#banner{
-	white-space: nowrap;
-	width: 995px;
+#banner {
+    white-space: nowrap;
+    width: 995px;
 }
 
-
-#sideNavi{
-	background-image: url('http://my.uoreplay.com/images/nav_bg.jpg');
-	background-position: center;
-	background-repeat: repeat-y;
-	float: left;
-	font-family: Georgia, Arial, Helvetica, sans-serif;
-	font-size: 13px;
-	font-weight: bold;
-	margin: 0px 10px 0px 28px;
-	text-align: left;
-	height: auto;
-	width: 173px;
+#sideNavi {
+    background-image: url('http://my.uoreplay.com/images/nav_bg.jpg');
+    background-position: center;
+    background-repeat: repeat-y;
+    float: left;
+    font-family: Georgia, Arial, Helvetica, sans-serif;
+    font-size: 13px;
+    font-weight: bold;
+    margin: 0px 10px 0px 28px;
+    text-align: left;
+    height: auto;
+    width: 173px;
 }
 
 .remote {
-	background-image: url('http://my.uoreplay.com/images/nav_divinity.jpg');
-	background-position: top center;
-	background-repeat: no-repeat;
-	padding: 125px 0px 0px 0px;
-	width: 173px;
+    background-image: url('http://my.uoreplay.com/images/nav_divinity.jpg');
+    background-position: top center;
+    background-repeat: no-repeat;
+    padding: 125px 0px 0px 0px;
+    width: 173px;
 
 }
 
 .subNavi {
-	text-align: center;
+    text-align: center;
 }
 
 .listNumber {
-	font-size: 18px;
-	font-weight: bold;
-	color: #990000;
+    font-size: 18px;
+    font-weight: bold;
+    color: #990000;
 }
 
 .redtext {
-	color: #990000;
+    color: #990000;
 }
 
 .graytext {
-	color: #333333;
+    color: #333333;
 }
 
 .smalltext {
-	font-size: 11px;
+    font-size: 11px;
 }
 
-.remote a:link, .remote a:visited, .remote a:active{
-	background-image: none;
-	background-position: center;
-	background-repeat: no-repeat;
-	color: #F2F2F2;
-	display: block;
-	height: 27px;
-	line-height: 27px;
-	margin: 2px 0px 2px 0px;
-	text-align: center;
-	text-decoration: none;
-	width: 160px;
+.remote a:link, .remote a:visited, .remote a:active {
+    background-image: none;
+    background-position: center;
+    background-repeat: no-repeat;
+    color: #F2F2F2;
+    display: block;
+    height: 27px;
+    line-height: 27px;
+    margin: 2px 0px 2px 0px;
+    text-align: center;
+    text-decoration: none;
+    width: 160px;
 }
 
-.remote a:hover{
-	background-image: url('http://my.uoreplay.com/images/remote_over.gif');
-	background-position: center;
-	background-repeat: no-repeat;
-	color: #660000;
-	display: block;
-	height: 27px;
-	line-height: 27px;
-	text-decoration: underline;
-	width: 160px;
+.remote a:hover {
+    background-image: url('http://my.uoreplay.com/images/remote_over.gif');
+    background-position: center;
+    background-repeat: no-repeat;
+    color: #660000;
+    display: block;
+    height: 27px;
+    line-height: 27px;
+    text-decoration: underline;
+    width: 160px;
 }
 
-.remote_sub a:link, .remote_sub a:visited, .remote_sub a:active{
-	background-image: url('http://my.uoreplay.com/images/remote_sub_norm.gif');
-	color: #FFFFFF;
-	display: block;
-	font-size: 11px;
-	font-weight: bold;
-	line-height: 27px;
-	height: 27px;
-	margin-bottom: 1px;
-	text-align: center;
-	text-decoration: none;
-	width: 158px;
+.remote_sub a:link, .remote_sub a:visited, .remote_sub a:active {
+    background-image: url('http://my.uoreplay.com/images/remote_sub_norm.gif');
+    color: #FFFFFF;
+    display: block;
+    font-size: 11px;
+    font-weight: bold;
+    line-height: 27px;
+    height: 27px;
+    margin-bottom: 1px;
+    text-align: center;
+    text-decoration: none;
+    width: 158px;
 }
 
-.remote_sub a:hover{
-	background-image: url('http://my.uoreplay.com/images/remote_over.gif');
-	background-position: center;
-	background-repeat: no-repeat;
-	color: #660000;
-	font-weight: bold;
-	display: block;
-	line-height: 27px;
-	text-decoration: underline;
+.remote_sub a:hover {
+    background-image: url('http://my.uoreplay.com/images/remote_over.gif');
+    background-position: center;
+    background-repeat: no-repeat;
+    color: #660000;
+    font-weight: bold;
+    display: block;
+    line-height: 27px;
+    text-decoration: underline;
 }
 
-.subNavi a:link, .subNavi a:visited, .subNavi a:active{
-	color: #990000;
-	font-size: 11px;
-	margin: 2px 0px 2px 0px;
-	text-align: center;
-	text-decoration: none;
+.subNavi a:link, .subNavi a:visited, .subNavi a:active {
+    color: #990000;
+    font-size: 11px;
+    margin: 2px 0px 2px 0px;
+    text-align: center;
+    text-decoration: none;
 }
 
-.subNavi a:hover{
-	color: #FF0000;
-	text-decoration: underline;
+.subNavi a:hover {
+    color: #FF0000;
+    text-decoration: underline;
 }
 
-a:link, a:visited, a:active{
-	color: #990000;
-	text-decoration: none;
+a:link, a:visited, a:active {
+    color: #990000;
+    text-decoration: none;
 }
 
-a:hover{
-	color: #FF0000;
-	text-decoration: underline;
+a:hover {
+    color: #FF0000;
+    text-decoration: underline;
 }
 
-.headlinesStyle a:link, .headlinesStyle a:visited, .headlinesStyle a:active{
-	background-image:url('http://my.uoreplay.com/images/headline_normal.gif');
-	background-repeat:no-repeat;
-	background-position: center bottom;
-	color: #000000;
-	display: block;
-	height: 30px;
-	line-height: 30px;
-	margin: 0px 0px -1px 2px;
-	text-decoration: none;
-	text-indent: 15px;
-	width: 400px;
+.headlinesStyle a:link, .headlinesStyle a:visited, .headlinesStyle a:active {
+    background-image: url('http://my.uoreplay.com/images/headline_normal.gif');
+    background-repeat: no-repeat;
+    background-position: center bottom;
+    color: #000000;
+    display: block;
+    height: 30px;
+    line-height: 30px;
+    margin: 0px 0px -1px 2px;
+    text-decoration: none;
+    text-indent: 15px;
+    width: 400px;
 }
 
-.headlinesStyle a:hover{
-	color: #000000;
-	display: block;
-	height: 30px;
-	line-height: 30px;
-	text-decoration: underline;
-	width: 400px;
+.headlinesStyle a:hover {
+    color: #000000;
+    display: block;
+    height: 30px;
+    line-height: 30px;
+    text-decoration: underline;
+    width: 400px;
 }
 
 p {
-	margin: 0px 0px 0px 0px;
-	padding: 8px 0px 8px 0px;
+    margin: 0px 0px 0px 0px;
+    padding: 8px 0px 8px 0px;
 }
 
-#footer{
-	padding: 0px 0px 0px 0px;
-	margin: 0px 0px 10px 0px;
-	width: 998px;
+#footer {
+    padding: 0px 0px 0px 0px;
+    margin: 0px 0px 10px 0px;
+    width: 998px;
 }

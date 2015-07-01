@@ -2,49 +2,49 @@
 
 require("myrunuo.inc.php");
 
-    $link = sql_connect();
-    $result = sql_query($link, "SELECT COUNT(*) FROM myrunuo_characters"); // adds number of players
-    list($numchars) = mysql_fetch_row($result);
-    $numchars = intval($numchars);
-    mysql_free_result($result);
-    if ($numchars == 1)
-       $players = "character";
-    else
-       $players = "characters";
-    
-    $result = sql_query($link, "SELECT COUNT(*) FROM myrunuo_guilds"); // adds number of guilds
-    list($numguilds) = mysql_fetch_row($result);
-    $numguilds = intval($numguilds);
-    mysql_free_result($result);
-    //proper punctuation
-    if ($numguilds == 1)
-       $guild = "guild";
-    else
-       $guild = "guilds";
-       
-      $result = sql_query($link, "SELECT items,mobiles,uptime,accounts FROM myrunuo_statistics"); //Retrieves information on Items
-      if (!(list($items,$mobiles,$uptime,$accounts) = mysql_fetch_row($result)))
-      mysql_free_result($result);
-    
-      $result = sql_query($link, "SELECT update_time
+$link = sql_connect();
+$result = sql_query($link, "SELECT COUNT(*) FROM myrunuo_characters"); // adds number of players
+list($numchars) = mysql_fetch_row($result);
+$numchars = intval($numchars);
+mysql_free_result($result);
+if ($numchars == 1)
+	$players = "character";
+else
+	$players = "characters";
+
+$result = sql_query($link, "SELECT COUNT(*) FROM myrunuo_guilds"); // adds number of guilds
+list($numguilds) = mysql_fetch_row($result);
+$numguilds = intval($numguilds);
+mysql_free_result($result);
+//proper punctuation
+if ($numguilds == 1)
+	$guild = "guild";
+else
+	$guild = "guilds";
+
+$result = sql_query($link, "SELECT items,mobiles,uptime,accounts FROM myrunuo_statistics"); //Retrieves information on Items
+if (!(list($items, $mobiles, $uptime, $accounts) = mysql_fetch_row($result)))
+	mysql_free_result($result);
+
+$result = sql_query($link, "SELECT update_time
 FROM information_schema.tables
 WHERE TABLE_SCHEMA = 'myrunuo' AND TABLE_NAME = 'myrunuo_statistics' AND update_time > (NOW() - INTERVAL 5 MINUTE);");
-      if (!(list($tableuptime) = mysql_fetch_row($result)))
-      mysql_free_result($result);
-      $currentDate = strtotime($tableuptime);
-      $futureDate = $currentDate+(70*5);
-      $formatDate = date("Y-m-d H:i:s", $futureDate);
-      if (date("Y-m-d H:i:s") > $formatDate)
-        $uptime = "The server is currently down.";
-	$result = sql_query($link, "SELECT time_datetime FROM myrunuo_timestamps WHERE time_type='Status'");
-	if (!(list($timestamp) = mysql_fetch_row($result)))
-  	$timestamp = "";
+if (!(list($tableuptime) = mysql_fetch_row($result)))
 	mysql_free_result($result);
-      mysql_close($link);
+$currentDate = strtotime($tableuptime);
+$futureDate = $currentDate + (70 * 5);
+$formatDate = date("Y-m-d H:i:s", $futureDate);
+if (date("Y-m-d H:i:s") > $formatDate)
+	$uptime = "The server is currently down.";
+$result = sql_query($link, "SELECT time_datetime FROM myrunuo_timestamps WHERE time_type='Status'");
+if (!(list($timestamp) = mysql_fetch_row($result)))
+	$timestamp = "";
+mysql_free_result($result);
+mysql_close($link);
 if ($timestamp != "")
-  $dt = date("F j, Y, g:i a", strtotime($timestamp));
+	$dt = date("F j, Y, g:i a", strtotime($timestamp));
 else
-  $dt = date("F j, Y, g:i a");
+	$dt = date("F j, Y, g:i a");
 
 echo <<<EOF
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
@@ -60,7 +60,7 @@ echo <<<EOF
 <body> 
 <div align="center"> 
  
-<div id="banner"><img src="../images/banner.jpg"></div> 
+<div id="banner"><img src="./images/banner.jpg"></div>
 <div id="container"> 
 <div id="main"> 
 	<div id="sideNavi"> 
@@ -68,15 +68,12 @@ echo <<<EOF
 <ul> 
 	<li class="navigation"><a href="index.php">Statistics</a> 
 		<ul> 
-			<!--<li class="navigation"><a href="/factions/">Factions</a></li> -->
-                     <li class="navigation"><a href="status.php">Online Players</a></li>
+			<li class="navigation"><a href="status.php">Online Players</a></li>
 			<li class="navigation"><a href="players.php">Players</a></li> 
 			<li class="navigation"><a href="guilds.php">Guilds</a></li> 
 			<li class="navigation"><a href="dueling.php">Dueling</a></li>
 			<li class="navigation"><a href="bounties.php?sortby=Bounty&flip=1">Bounties</a></li>
 			<li class="navigation"><a href="bulletinboard.php">Bulletin Posts</a></li>
-			<!--<li class="navigation"><a href="http://videos.uogamers.com/">Videos</a></li>
-			<li class="navigation"><a href="http://poker.uogamers.com/">Poker</a></li> --> 
 		</ul> 
 		</ul> 
 	</li> 

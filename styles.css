@@ -1,4 +1,7 @@
-images { border: none; }
+images {
+    border: none;
+}
+
 /*a, :link, :visited {
 	color: #000000;
 	text-decoration: none;
@@ -10,15 +13,15 @@ a:hover {
 }*/
 
 .full {
-	width: 100%;
+    width: 100%;
 }
 
 .nowrap {
-	white-space: nowrap;
+    white-space: nowrap;
 }
 
 images {
-	border: none;
+    border: none;
 }
 
 /*body {
@@ -29,11 +32,12 @@ images {
 }*/
 
 .header {
-	color: #9B0303;
-	font-weight: bolder;
+    color: #9B0303;
+    font-weight: bolder;
 }
 
-.entry {}
+.entry {
+}
 
 /*td.table-border {
 	background-color: #CEBAA2;
@@ -44,181 +48,181 @@ table tr td.table-border table tr td {
 }*/
 
 .subtext {
-	font-size: 9px;
-	color: #666;
-	white-space: nowrap;
+    font-size: 9px;
+    color: #666;
+    white-space: nowrap;
 }
 
 .subtext em {
-	font-style: normal;
-	color: #444;
+    font-style: normal;
+    color: #444;
 }
 
 .subtext em a, .subtext em :link, .subtext em :visited {
-	color: #444;
+    color: #444;
 }
 
 th.static, th.content {
-	/*background-color: #D2CAC1;
-	color: #990000;*/
-	text-align: left;
-	padding: 2px 15px 2px 5px;
+    /*background-color: #D2CAC1;
+    color: #990000;*/
+    text-align: left;
+    padding: 2px 15px 2px 5px;
 }
 
 th.content {
-	width: 100%;
+    width: 100%;
 }
 
 td.content {
-	padding: 2px 5px 2px 5px;
-	width: 100%;
+    padding: 2px 5px 2px 5px;
+    width: 100%;
 }
 
 h1, h2, h3 {
-	margin: 0;
-	padding: 0;
+    margin: 0;
+    padding: 0;
 }
 
 h1 {
-	font-size: 18px;
-	color: #900;
+    font-size: 18px;
+    color: #900;
 }
 
 h1 a, h1 :link, h1 :visited {
-	color: #900;
+    color: #900;
 }
 
 h2 {
-	font-size: 16px;
+    font-size: 16px;
 }
 
 h3 {
-	font-size: 12px;
+    font-size: 12px;
 }
 
 ul {
-	margin-left: 0px; /* 5px */
-	padding-left: 0em; /* 1em */
+    margin-left: 0px; /* 5px */
+    padding-left: 0em; /* 1em */
 }
 
 li {
-	margin-left: 0em;
-	padding-left: 0em;
+    margin-left: 0em;
+    padding-left: 0em;
 }
 
 .navigation {
-	white-space: nowrap;
-	list-style-type: none;
+    white-space: nowrap;
+    list-style-type: none;
 }
 
 fieldset {
-	border: none;
-	padding-left: 10px;
+    border: none;
+    padding-left: 10px;
 }
 
 fieldset legend {
-	margin-left: -10px;
-	padding-left: 15px;
-	padding-right: 30px;
-	border-bottom: 1px solid #900;
-	font-weight: bold;
-	font-size: larger;
+    margin-left: -10px;
+    padding-left: 15px;
+    padding-right: 30px;
+    border-bottom: 1px solid #900;
+    font-weight: bold;
+    font-size: larger;
 }
 
 .player-view {
-	width: 262px;
-	text-align: center;
-	margin: auto;
+    width: 262px;
+    text-align: center;
+    margin: auto;
 }
 
 .player-title {
-	margin-top: 10px;
+    margin-top: 10px;
 }
 
 .paperdoll {
-	text-align: left;
+    text-align: left;
 }
 
 .paperdoll-image {
-	width: 262px;
-	height: 259px;
-	border: 0;
-	padding: 0;
-	margin: 0;
+    width: 262px;
+    height: 259px;
+    border: 0;
+    padding: 0;
+    margin: 0;
 }
 
 .paperdoll-left {
-	width: 31px;
-	height: 64px;
-	background-position: bottom left;
-	background-image: url(muls/paperdoll_left.gif);
-	border: 0;
-	padding: 0;
-	margin: 0;
+    width: 31px;
+    height: 64px;
+    background-position: bottom left;
+    background-image: url(muls/paperdoll_left.gif);
+    border: 0;
+    padding: 0;
+    margin: 0;
 }
 
 .paperdoll-center {
-	width: 198px;
-	height: 64px;
-	background-repeat: repeat-x;
-	background-position: bottom center;
-	background-image: url(muls/paperdoll_text.jpg);
-	border: 0;
-	padding: 0;
-	margin: 0;
+    width: 198px;
+    height: 64px;
+    background-repeat: repeat-x;
+    background-position: bottom center;
+    background-image: url(muls/paperdoll_text.jpg);
+    border: 0;
+    padding: 0;
+    margin: 0;
 }
 
 .paperdoll-right {
-	width: 33px;
-	height: 64px;
-	background-position: bottom right;
-	background-image: url(muls/paperdoll_right.gif);
-	border: 0;
-	padding: 0;
-	margin: 0;
+    width: 33px;
+    height: 64px;
+    background-position: bottom right;
+    background-image: url(muls/paperdoll_right.gif);
+    border: 0;
+    padding: 0;
+    margin: 0;
 }
 
 .faction-title {
-	color: red;
-	font-size: 10px;
+    color: red;
+    font-size: 10px;
 }
 
 .faction-title a, .faction-title :link, .faction-title :visited {
-	color: red;
+    color: red;
 }
 
 .guild-title {
-	color: green;
-	font-size: 10px;
+    color: green;
+    font-size: 10px;
 }
 
 .guild-title a, .guild-title :link, .guild-title :visited {
-	color: green;
+    color: green;
 }
 
 .player-name {
-	font-size: 12px;
+    font-size: 12px;
 }
 
 .player-red {
-	color: red;
-	font-weight: bold;
-	position: relative;
-	width: 180px;
-	height: 34px;
-	left: 40px;
-	top: -60px;
+    color: red;
+    font-weight: bold;
+    position: relative;
+    width: 180px;
+    height: 34px;
+    left: 40px;
+    top: -60px;
 
 }
 
 .player-blue {
-	color: white;
-	font-weight: bold;
-	position: relative;
-	width: 180px;
-	height: 34px;
-	left: 40px;
-	top: -60px;
+    color: white;
+    font-weight: bold;
+    position: relative;
+    width: 180px;
+    height: 34px;
+    left: 40px;
+    top: -60px;
 }
 
 /*#footer {
@@ -233,103 +237,104 @@ fieldset legend {
 }*/
 
 .remote {
-	background-image: url('http://my.uoreplay.com/images/nav_hybrid.jpg');
+    background-image: url('http://my.uoreplay.com/images/nav_hybrid.jpg');
 }
 
 .section {
-	width: 100%;
+    width: 100%;
 }
 
 .content {
-	margin-top: 20px;
-	padding-right: 20px;
+    margin-top: 20px;
+    padding-right: 20px;
 }
 
 .section-tl, .section-tm, .section-rt,
 .section-ml, .section-mm, .section-mr,
 .section-bl, .section-bm, .section-br {
-	background-repeat: no-repeat;
+    background-repeat: no-repeat;
 }
 
 .section-tm, .section-bm {
-	background-repeat: repeat-x;
+    background-repeat: repeat-x;
 }
 
 .section-ml, .section-mr {
-	background-repeat: repeat-y;
+    background-repeat: repeat-y;
 }
 
 .section-mm {
-	background-repeat: repeat;
+    background-repeat: repeat;
 }
 
 .section-tl, .section-mt, .section-rt {
-	height: 26px;
+    height: 26px;
 }
 
 .section-bl, .section-mb, .section-br {
-	height: 26px;
+    height: 26px;
 }
 
 .section-tl, .section-lm, .section-bl {
-	width: 26px;
+    width: 26px;
 }
 
 .section-tr, .section-rm, .section-br {
-	width: 26px;
+    width: 26px;
 }
 
 .section-tl {
-	background-position: top left;
-	background-image: url(http://my.uoreplay.com/images/section-tl.gif);
+    background-position: top left;
+    background-image: url(http://my.uoreplay.com/images/section-tl.gif);
 }
 
 .section-tm {
-	background-position: top left;
-	background-image: url(http://my.uoreplay.com/images/section-tm.gif);
+    background-position: top left;
+    background-image: url(http://my.uoreplay.com/images/section-tm.gif);
 }
 
 .section-tr {
-	background-position: top right;
-	background-image: url(http://my.uoreplay.com/images/section-tr.gif);
+    background-position: top right;
+    background-image: url(http://my.uoreplay.com/images/section-tr.gif);
 }
 
 .section-ml {
-	background-position: top left;
-	background-image: url(http://my.uoreplay.com/images/section-ml.gif);
+    background-position: top left;
+    background-image: url(http://my.uoreplay.com/images/section-ml.gif);
 }
 
 .section-mr {
-	background-position: top right;
-	background-image: url(http://my.uoreplay.com/images/section-mr.gif);
+    background-position: top right;
+    background-image: url(http://my.uoreplay.com/images/section-mr.gif);
 }
 
 .section-bl {
-	background-position: bottom left;
-	background-image: url(http://my.uoreplay.com/images/section-bl.gif);
+    background-position: bottom left;
+    background-image: url(http://my.uoreplay.com/images/section-bl.gif);
 }
 
 .section-bm {
-	background-position: bottom left;
-	background-image: url(http://my.uoreplay.com/images/section-bm.gif);
+    background-position: bottom left;
+    background-image: url(http://my.uoreplay.com/images/section-bm.gif);
 }
 
 .section-br {
-	background-position: bottom right;
-	background-image: url(http://my.uoreplay.com/images/section-br.gif);
+    background-position: bottom right;
+    background-image: url(http://my.uoreplay.com/images/section-br.gif);
 }
 
 .section-mm {
-	background-position: top left;
-	background-image: url(http://my.uoreplay.com/images/section-mm.gif);
+    background-position: top left;
+    background-image: url(http://my.uoreplay.com/images/section-mm.gif);
 }
 
 .separator {
-	background-image: url(http://my.uoreplay.com/images/separator.gif);
-	margin: auto;
-	width: 400px;
-	height: 45px;
+    background-image: url(http://my.uoreplay.com/images/separator.gif);
+    margin: auto;
+    width: 400px;
+    height: 45px;
 }
+
 /*body
 {
 background-image:url('gradient2.png');

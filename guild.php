@@ -10,44 +10,42 @@ $link = sql_connect();
 // Get guild data
 $result = sql_query($link, "SELECT * FROM myrunuo_guilds WHERE guild_id=$id LIMIT 1");
 if ($row = mysql_fetch_array($result)) {
-  mysql_free_result($result);
-  while (list($key, $val) = each($row))
-    ${$key} = $val;
+	mysql_free_result($result);
+	while (list($key, $val) = each($row))
+		${$key} = $val;
 
-  $guild_wars = intval($guild_wars);
-  $guild_members = intval($guild_members);
-  $guild_master = intval($guild_master);
+	$guild_wars = intval($guild_wars);
+	$guild_members = intval($guild_members);
+	$guild_master = intval($guild_master);
 
-  $capguild = strtolower(substr($guild_name, 0, 1)).".gif";
-  $full_name = $guild_name;
-  $guild_name = substr($guild_name, 1);
+	$capguild = strtolower(substr($guild_name, 0, 1)) . ".gif";
+	$full_name = $guild_name;
+	$guild_name = substr($guild_name, 1);
 
-  if ($guild_website != "") {
-    if (strncasecmp($guild_name, "http://", 7))
-      $guild_website = "http://".$guild_website;
-    $guild_website = "<a href=\"$guild_website\" target=\"_blank\">$guild_website</a>";
-  }
-  else
-    $guild_website = "None";
+	if ($guild_website != "") {
+		if (strncasecmp($guild_name, "http://", 7))
+			$guild_website = "http://" . $guild_website;
+		$guild_website = "<a href=\"$guild_website\" target=\"_blank\">$guild_website</a>";
+	} else
+		$guild_website = "None";
 
-  if ($guild_charter == "")
-    $guild_charter = "No guild charter has been specified.";
-}
-else {
-  echo "Invalid guild ID.<br>\n";
-  mysql_close($link);
-  die();
+	if ($guild_charter == "")
+		$guild_charter = "No guild charter has been specified.";
+} else {
+	echo "Invalid guild ID.<br>\n";
+	mysql_close($link);
+	die();
 }
 
 $result = sql_query($link, "SELECT char_name FROM myrunuo_characters WHERE char_id=$guild_master LIMIT 1");
 if (!(list($master_name) = mysql_fetch_row($result)))
-  $master_name = "None";
+	$master_name = "None";
 mysql_free_result($result);
 
 // Guild timestamp
 $result = sql_query($link, "SELECT time_datetime FROM myrunuo_timestamps WHERE time_type='Guilds'");
 if (!(list($timestamp) = mysql_fetch_row($result)))
-  $timestamp = "";
+	$timestamp = "";
 mysql_free_result($result);
 
 echo <<<EOF
@@ -81,7 +79,7 @@ echo <<<EOF
 <body> 
 <div align="center"> 
  
-<div id="banner"><img src="../images/banner.jpg"></div> 
+<div id="banner"><img src="./images/banner.jpg"></div>
 <div id="container"> 
 <div id="main"> 
 	<div id="sideNavi"> 
@@ -89,15 +87,12 @@ echo <<<EOF
 <ul> 
 	<li class="navigation"><a href="index.php">Statistics</a> 
 		<ul> 
-			<!--<li class="navigation"><a href="/factions/">Factions</a></li> -->
-                     <li class="navigation"><a href="status.php">Online Players</a></li>
+			<li class="navigation"><a href="status.php">Online Players</a></li>
 			<li class="navigation"><a href="players.php">Players</a></li> 
 			<li class="navigation"><a href="guilds.php">Guilds</a></li> 
 			<li class="navigation"><a href="dueling.php">Dueling</a></li>
 			<li class="navigation"><a href="bounties.php?sortby=Bounty&flip=1">Bounties</a></li>
 			<li class="navigation"><a href="bulletinboard.php">Bulletin Posts</a></li>
-			<!--<li class="navigation"><a href="http://videos.uogamers.com/">Videos</a></li>
-			<li class="navigation"><a href="http://poker.uogamers.com/">Poker</a></li> --> 
 		</ul> 
 		</ul> 
 	</li> 
@@ -226,26 +221,26 @@ EOF;
 // Guild Members
 $result = sql_query($link, "SELECT char_id,char_name,char_nototitle,char_guildtitle,char_public FROM myrunuo_characters WHERE char_guild=$id");
 if (mysql_numrows($result)) {
-  while ($row = mysql_fetch_row($result)) {
-    $charid = intval($row[0]);
-    $charname = $row[1];
-    $chartitle = $row[2];
-    $charguildtitle = $row[3];
-    $charpublic = intval($row[4]);
+	while ($row = mysql_fetch_row($result)) {
+		$charid = intval($row[0]);
+		$charname = $row[1];
+		$chartitle = $row[2];
+		$charguildtitle = $row[3];
+		$charpublic = intval($row[4]);
 
-    if (strcasecmp($charguildtitle, "NULL"))
-      $charguildtitle = " [$charguildtitle]";
-    else
-      $charguildtitle = "";
+		if (strcasecmp($charguildtitle, "NULL"))
+			$charguildtitle = " [$charguildtitle]";
+		else
+			$charguildtitle = "";
 
-    $cma = strpos($chartitle, ",");
-    $namedisplay = substr($chartitle, 0, $cma);
-    $chartitle = substr($chartitle, $cma);
+		$cma = strpos($chartitle, ",");
+		$namedisplay = substr($chartitle, 0, $cma);
+		$chartitle = substr($chartitle, $cma);
 
-    echo <<< EOF
+		echo <<< EOF
 <a href="player.php?id=$charid">$chartitle $charguildtitle<br></a>
 EOF;
-  }
+	}
 }
 
 echo <<<EOF
@@ -258,33 +253,33 @@ EOF;
 $result = sql_query($link, "SELECT guild_name,guild_2 FROM myrunuo_guilds_wars INNER JOIN myrunuo_guilds ON guild_2=guild_id WHERE guild_1=$id");
 $num1 = mysql_numrows($result);
 if ($num1) {
-  while ($row = mysql_fetch_row($result)) {
-    $war_name = $row[0];
-    $war_id = intval($row[1]);
-    echo "      <font face=\"Verdana\" size=\"-1\"><a href=\"guild.php?id=$war_id\">$war_name</a></font><br>\n";
-  }
+	while ($row = mysql_fetch_row($result)) {
+		$war_name = $row[0];
+		$war_id = intval($row[1]);
+		echo "      <font face=\"Verdana\" size=\"-1\"><a href=\"guild.php?id=$war_id\">$war_name</a></font><br>\n";
+	}
 }
 
 // Guild Wars 2
 $result = sql_query($link, "SELECT guild_name,guild_1 FROM myrunuo_guilds_wars INNER JOIN myrunuo_guilds ON guild_1=guild_id WHERE guild_2=$id");
 $num2 = mysql_numrows($result);
 if ($num2) {
-  while ($row = mysql_fetch_row($result)) {
-    $war_name = $row[0];
-    $war_id = intval($row[1]);
-    echo "      <font face=\"Verdana\" size=\"-1\"><a href=\"guild.php?id=$war_id\">$war_name</a></font><br>\n";
-  }
+	while ($row = mysql_fetch_row($result)) {
+		$war_name = $row[0];
+		$war_id = intval($row[1]);
+		echo "      <font face=\"Verdana\" size=\"-1\"><a href=\"guild.php?id=$war_id\">$war_name</a></font><br>\n";
+	}
 }
 
 if (!$num1 && !$num2)
-  echo "      <font face=\"Verdana\" size=\"-1\">None</font>\n";
+	echo "      <font face=\"Verdana\" size=\"-1\">None</font>\n";
 
 mysql_close($link);
 
 if ($timestamp != "")
-  $dt = date("F j, Y, g:i a", strtotime($timestamp));
+	$dt = date("F j, Y, g:i a", strtotime($timestamp));
 else
-  $dt = date("F j, Y, g:i a");
+	$dt = date("F j, Y, g:i a");
 
 echo <<<EOF
   </tr>

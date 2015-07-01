@@ -7,27 +7,27 @@ $tp = intval($tp);
 
 check_get($flip, "flip");
 if ($flip)
-  $sw = "desc";
+	$sw = "desc";
 else
-  $sw = "";
+	$sw = "";
 
 check_get($sortby, "sortby");
 $s = $sortby;
 switch (strtolower($s)) {
-  case "name":
-    $sortby = "char_name";
-    break;
-  case "kills":
-    $sortby = "char_counts";
-    break;
-  case "bounty":
-    $sortby = "bounty";
-    break;
-  case "guild":
-    $sortby = "char_guild";
-    break;
-  default: // name
-    $sortby = "bounty";
+	case "name":
+		$sortby = "char_name";
+		break;
+	case "kills":
+		$sortby = "char_counts";
+		break;
+	case "bounty":
+		$sortby = "bounty";
+		break;
+	case "guild":
+		$sortby = "char_guild";
+		break;
+	default: // name
+		$sortby = "bounty";
 }
 
 $link = sql_connect();
@@ -35,25 +35,25 @@ $link = sql_connect();
 // Status timestamp
 $result = sql_query($link, "SELECT time_datetime FROM myrunuo_timestamps WHERE time_type = 'Char'");
 if (!(list($timestamp) = mysql_fetch_row($result)))
-  $timestamp = "";
+	$timestamp = "";
 mysql_free_result($result);
 
 $nflip = $cflip = $fflip = $gflip = 0;
 if (!$flip) {
-  if ($sortby == "char_name")
-    $nflip = 1;
-  else if ($sortby == "char_counts")
-    $cflip = 1;
-  else if ($sortby == "bounty")
-    $fflip = 1;
-  else if ($sortby == "char_guild")
-    $gflip = 1;
+	if ($sortby == "char_name")
+		$nflip = 1;
+	else if ($sortby == "char_counts")
+		$cflip = 1;
+	else if ($sortby == "bounty")
+		$fflip = 1;
+	else if ($sortby == "char_guild")
+		$gflip = 1;
 }
 // Get total online player count
 $result = sql_query($link, "SELECT COUNT(*) FROM myrunuo_characters");
 if (!$result) {
-  echo "Database error.<br>\n";
-  exit;
+	echo "Database error.<br>\n";
+	exit;
 }
 list($totalplayers) = mysql_fetch_row($result);
 mysql_free_result($result);
@@ -83,7 +83,7 @@ echo <<<EOF
 <body> 
 <div align="center"> 
  
-<div id="banner"><img src="../images/banner.jpg" alt="" /></div> 
+<div id="banner"><img src="./images/banner.jpg" alt="" /></div>
 <div id="container"> 
 <div id="main"> 
 	<div id="sideNavi"> 
@@ -91,15 +91,12 @@ echo <<<EOF
 <ul> 
 	<li class="navigation"><a href="index.php">Statistics</a> 
 		<ul> 
-			<!--<li class="navigation"><a href="/factions/">Factions</a></li> -->
-                     <li class="navigation"><a href="status.php">Online Players</a></li>
+			<li class="navigation"><a href="status.php">Online Players</a></li>
 			<li class="navigation"><a href="players.php">Players</a></li> 
 			<li class="navigation"><a href="guilds.php">Guilds</a></li> 
 			<li class="navigation"><a href="dueling.php">Dueling</a></li>
 			<li class="navigation"><a href="bounties.php?sortby=Bounty&flip=1">Bounties</a></li>
 			<li class="navigation"><a href="bulletinboard.php">Bulletin Posts</a></li>
-			<!--<li class="navigation"><a href="http://videos.uogamers.com/">Videos</a></li>
-			<li class="navigation"><a href="http://poker.uogamers.com/">Poker</a></li> --> 
 		</ul> 
 		</ul> 
 	</li> 
@@ -146,20 +143,19 @@ echo <<<EOF
 EOF;
 
 if ($tp - $status_perpage >= 0) {
-  $num = $tp - $status_perpage;
-  echo "        <a href=\"bounties.php?tp=$num&sortby=$s\"><img src=\"images/items/back.jpg\" border=\"0\"></a>\n";
-}
-else
-  //echo "        &nbsp; &nbsp;";
+	$num = $tp - $status_perpage;
+	echo "        <a href=\"bounties.php?tp=$num&sortby=$s\"><img src=\"images/items/back.jpg\" border=\"0\"></a>\n";
+} else
+	//echo "        &nbsp; &nbsp;";
 
-$page = intval($tp / $status_perpage) + 1;
+	$page = intval($tp / $status_perpage) + 1;
 $pages = ceil($totalplayers / $status_perpage);
 if ($pages > 1)
-  echo " <font size=\"-1\" face=\"Verdana\">Page [$page/$pages]</font> ";
+	echo " <font size=\"-1\" face=\"Verdana\">Page [$page/$pages]</font> ";
 
 if ($tp + $status_perpage < $totalplayers) {
-  $num = $tp + $status_perpage;
-  echo "        <a href=\"bounties.php?tp=$num&sortby=$s\"><img src=\"images/items/next.jpg\" border=\"0\"></a>\n";
+	$num = $tp + $status_perpage;
+	echo "        <a href=\"bounties.php?tp=$num&sortby=$s\"><img src=\"images/items/next.jpg\" border=\"0\"></a>\n";
 }
 
 echo <<<EOF
@@ -171,22 +167,22 @@ EOF;
 $num = 0;
 
 if ($totalplayers) {
-  while ($row = mysql_fetch_row($result)) {
-    $charname = $row[0];
-    $kills = $row[1];
-    $bounty = number_format($row[2]);
-    $id = $row[3];
-    $guildid = $row[4];
-    $guild = $row[5];
+	while ($row = mysql_fetch_row($result)) {
+		$charname = $row[0];
+		$kills = $row[1];
+		$bounty = number_format($row[2]);
+		$id = $row[3];
+		$guildid = $row[4];
+		$guild = $row[5];
 
 
-    if ($guildid >= 1 && $guild == "")
-       $guild = "[none]";
-    else if ($guildid >= 1)
-       $guild = "[".$guild."]";
+		if ($guildid >= 1 && $guild == "")
+			$guild = "[none]";
+		else if ($guildid >= 1)
+			$guild = "[" . $guild . "]";
 
-    if ($charname != "" && $bounty > 0) {
-      echo <<<EOF
+		if ($charname != "" && $bounty > 0) {
+			echo <<<EOF
   <tr>
     <td>
       <font face="Verdana" size="2"><center>$kills</center></font>
@@ -209,13 +205,13 @@ if ($totalplayers) {
   </tr>
 
 EOF;
-      $num++;
-    }
-  }
+			$num++;
+		}
+	}
 }
 
 if (!$num) {
-  echo <<<EOF
+	echo <<<EOF
   <tr>
     <td colspan="5">
       <font face="Verdana" size="2">There are no bounties currently placed on anyone.</font>
@@ -229,9 +225,9 @@ mysql_free_result($result);
 mysql_close($link);
 
 if ($timestamp != "")
-  $dt = date("F j, Y, g:i a", strtotime($timestamp));
+	$dt = date("F j, Y, g:i a", strtotime($timestamp));
 else
-  $dt = date("F j, Y, g:i a");
+	$dt = date("F j, Y, g:i a");
 
 echo <<<EOF
   <tr>

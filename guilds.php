@@ -10,15 +10,15 @@ $wp = intval($wp);
 
 check_get($sortby, "sortby");
 if ($sortby == "" || $sortby == "guild_name")
-  $sort1 = "myrunuo_guilds.guild_name";
+	$sort1 = "myrunuo_guilds.guild_name";
 else
-  $sort1 = $sortby." DESC";
+	$sort1 = $sortby . " DESC";
 
 check_get($sortby1, "sortby1");
 if ($sortby1 == "" || $sortby1 == "guild_name")
-  $sort2 = "myrunuo_guilds.guild_name";
+	$sort2 = "myrunuo_guilds.guild_name";
 else
-  $sort2 = $sortby1." DESC";
+	$sort2 = $sortby1 . " DESC";
 
 $link = sql_connect();
 
@@ -49,7 +49,7 @@ mysql_free_result($result);
 // Guild timestamp
 $result = sql_query($link, "SELECT time_datetime FROM myrunuo_timestamps WHERE time_type='Guild'");
 if (!(list($timestamp) = mysql_fetch_row($result)))
-  $timestamp = "";
+	$timestamp = "";
 mysql_free_result($result);
 
 echo <<<EOF
@@ -66,7 +66,7 @@ echo <<<EOF
 <body> 
 <div align="center"> 
  
-<div id="banner"><img src="../images/banner.jpg"></div> 
+<div id="banner"><img src="./images/banner.jpg"></div>
 <div id="container"> 
 <div id="main"> 
 	<div id="sideNavi"> 
@@ -74,15 +74,12 @@ echo <<<EOF
 <ul> 
 	<li class="navigation"><a href="index.php">Statistics</a> 
 		<ul> 
-			<!--<li class="navigation"><a href="/factions/">Factions</a></li> -->
-                     <li class="navigation"><a href="status.php">Online Players</a></li>
+			<li class="navigation"><a href="status.php">Online Players</a></li>
 			<li class="navigation"><a href="players.php">Players</a></li> 
 			<li class="navigation"><a href="guilds.php">Guilds</a></li> 
 			<li class="navigation"><a href="dueling.php">Dueling</a></li>
 			<li class="navigation"><a href="bounties.php?sortby=Bounty&flip=1">Bounties</a></li>
 			<li class="navigation"><a href="bulletinboard.php">Bulletin Posts</a></li>
-			<!--<li class="navigation"><a href="http://videos.uogamers.com/">Videos</a></li>
-			<li class="navigation"><a href="http://poker.uogamers.com/">Poker</a></li> --> 
 		</ul> 
 		</ul> 
 	</li> 
@@ -144,20 +141,19 @@ echo <<<EOF
 EOF;
 
 if ($gp - $guilds_perpage >= 0) {
-  $num = $gp - $guilds_perpage;
-  echo "        <a href=\"guilds.php?gp=$num&wp=$wp&sortby=$sortby&sortby1=$sortby1\"><img src=\"images/items/back.jpg\" border=\"0\"></a>\n";
-}
-else
-  echo "        &nbsp; &nbsp;";
+	$num = $gp - $guilds_perpage;
+	echo "        <a href=\"guilds.php?gp=$num&wp=$wp&sortby=$sortby&sortby1=$sortby1\"><img src=\"images/items/back.jpg\" border=\"0\"></a>\n";
+} else
+	echo "        &nbsp; &nbsp;";
 
 $page = intval($gp / $guilds_perpage) + 1;
 $pages = ceil($totalguilds / $guilds_perpage);
 if ($pages > 1)
-  echo " <font size=\"-1\" face=\"Verdana\">Page [$page/$pages]</font> ";
+	echo " <font size=\"-1\" face=\"Verdana\">Page [$page/$pages]</font> ";
 
 if ($gp + $guilds_perpage < $totalguilds) {
-  $num = $gp + $guilds_perpage;
-  echo "        <a href=\"guilds.php?gp=$num&wp=$wp&sortby=$sortby&sortby1=$sortby1\"><img src=\"images/items/next.jpg\" border=\"0\"></a>\n";
+	$num = $gp + $guilds_perpage;
+	echo "        <a href=\"guilds.php?gp=$num&wp=$wp&sortby=$sortby&sortby1=$sortby1\"><img src=\"images/items/next.jpg\" border=\"0\"></a>\n";
 }
 
 echo <<<EOF
@@ -194,13 +190,13 @@ $result = sql_query($link, "SELECT guild_id,guild_name,COUNT(char_guild) AS coun
                     FROM myrunuo_guilds INNER JOIN myrunuo_characters ON guild_id=char_guild
                     GROUP BY guild_name ORDER by $sort1 LIMIT $gp,$guilds_perpage");
 if (mysql_numrows($result)) {
-  $num = $gp * $guilds_perpage + 1;
-  while ($row = mysql_fetch_row($result)) {
-    $guildid = intval($row[0]);
-    $name = $row[1];
-    $members = intval($row[2]);
-    $kills = intval($row[3]);
-    echo <<<EOF
+	$num = $gp * $guilds_perpage + 1;
+	while ($row = mysql_fetch_row($result)) {
+		$guildid = intval($row[0]);
+		$name = $row[1];
+		$members = intval($row[2]);
+		$kills = intval($row[3]);
+		echo <<<EOF
             <tr> 
               <td align="right" width="10">
                 <font face="Verdana" size="-1">$num</font></td>
@@ -216,11 +212,10 @@ if (mysql_numrows($result)) {
             </tr>
 
 EOF;
-    $num++;
-  }
-}
-else {
-  echo <<<EOF
+		$num++;
+	}
+} else {
+	echo <<<EOF
             <tr> 
               <td colspan="3">
                 <font face="Verdana" size="-1">No matching guilds found.</font>
@@ -245,20 +240,19 @@ echo <<<EOF
 EOF;
 
 if ($wp - $guilds_perpage > 0) {
-  $num = $wp - $guilds_perpage;
-  echo "                <a href=\"guilds.php?wp=$num&gp=$gp&sortby=$sortby&sortby1=$sortby1\"><img src=\"images/items/back.jpg\" border=\"0\"></a>\n";
-}
-else
-  echo "                &nbsp;&nbsp;";
+	$num = $wp - $guilds_perpage;
+	echo "                <a href=\"guilds.php?wp=$num&gp=$gp&sortby=$sortby&sortby1=$sortby1\"><img src=\"images/items/back.jpg\" border=\"0\"></a>\n";
+} else
+	echo "                &nbsp;&nbsp;";
 
 $page = intval($wp / $guilds_perpage) + 1;
 $pages = ceil($totalwar / $guilds_perpage);
 if ($pages > 1)
-  echo " <font size=\"-1\" face=\"Verdana\">Page [$page/$pages]</font> ";
+	echo " <font size=\"-1\" face=\"Verdana\">Page [$page/$pages]</font> ";
 
 if ($wp + $guilds_perpage < $totalwar) {
-  $num = $wp + $guilds_perpage;
-  echo "                <a href=\"guilds.php?wp=$num&gp=$gp&sortby=$sortby&sortby1=$sortby1\"><img src=\"images/items/next.jpg\" border=\"0\"></a>\n";
+	$num = $wp + $guilds_perpage;
+	echo "                <a href=\"guilds.php?wp=$num&gp=$gp&sortby=$sortby&sortby1=$sortby1\"><img src=\"images/items/next.jpg\" border=\"0\"></a>\n";
 }
 
 echo <<<EOF
@@ -289,13 +283,13 @@ $result = sql_query($link, "SELECT guild_id,guild_name,COUNT(guild_1) AS countof
 $num = mysql_numrows($result);
 
 if ($num) {
-  $num = $wp * $guilds_perpage + 1;
-  while ($row = mysql_fetch_row($result)) {
-    $guildid = intval($row[0]);
-    $name = $row[1];
-    $enemies = intval($row[2]);
+	$num = $wp * $guilds_perpage + 1;
+	while ($row = mysql_fetch_row($result)) {
+		$guildid = intval($row[0]);
+		$name = $row[1];
+		$enemies = intval($row[2]);
 
-    echo <<<EOF
+		echo <<<EOF
             <tr> 
               <td align="right" width="10">
                 <font face="Verdana" size="-1">$num</font>
@@ -309,11 +303,10 @@ if ($num) {
             </tr>
 
 EOF;
-    $num++;
-  }
-}
-else {
-  echo <<<EOF
+		$num++;
+	}
+} else {
+	echo <<<EOF
            <tr> 
               <td colspan="4"><font face="Verdana" size="-1">No matching guilds found.</font></td>
             </tr>
@@ -325,9 +318,9 @@ mysql_free_result($result);
 mysql_close($link);
 
 if ($timestamp != "")
-  $dt = date("F j, Y, g:i a", strtotime($timestamp));
+	$dt = date("F j, Y, g:i a", strtotime($timestamp));
 else
-  $dt = date("F j, Y, g:i a");
+	$dt = date("F j, Y, g:i a");
 
 echo <<<EOF
           </tbody>

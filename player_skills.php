@@ -17,17 +17,15 @@ $link = sql_connect();
 // Skills timestamp
 $result = sql_query($link, "SELECT time_datetime FROM myrunuo_timestamps WHERE time_type='Skills'");
 if (!(list($timestamp) = mysql_fetch_row($result)))
-  $timestamp = "";
+	$timestamp = "";
 mysql_free_result($result);
 
-if ($id) 
-{
-  $result = sql_query($link, "SELECT char_name,char_public,char_female FROM myrunuo_characters WHERE char_id=$id");
-  if (!(list($charname,$public,$sex) = mysql_fetch_row($result))) 
- {
-    echo "Invalid character ID!\n";
-    die();
-  }
+if ($id) {
+	$result = sql_query($link, "SELECT char_name,char_public,char_female FROM myrunuo_characters WHERE char_id=$id");
+	if (!(list($charname, $public, $sex) = mysql_fetch_row($result))) {
+		echo "Invalid character ID!\n";
+		die();
+	}
 }
 
 
@@ -88,30 +86,27 @@ echo <<<EOF
           <tbody>
 
 EOF;
-    if ( $sex = 1 )
-       $sex1 = "her";
-    else
-       $sex1 = "his";
+if ($sex = 1)
+	$sex1 = "her";
+else
+	$sex1 = "his";
 /*$result = sql_query($link, "SELECT skill_id,SUM(skill_value) AS totalskill_value
                     FROM myrunuo_characters LEFT JOIN myrunuo_characters_skills ON myrunuo_characters.char_id=myrunuo_characters_skills.char_id
                     WHERE char_guild=$id GROUP BY skill_id");*/ // AND char_public=1
-if ($public == 1)
-{
-$result = sql_query($link, "SELECT skill_id,skill_value FROM myrunuo_characters_skills WHERE char_id=$id");
+if ($public == 1) {
+	$result = sql_query($link, "SELECT skill_id,skill_value FROM myrunuo_characters_skills WHERE char_id=$id");
 
-$sid = -1;
-for ($l = 0; $l < 2; $l++) 
-{
-  for ($i = 0 + ($l * 26); $i <= 25 + ($l * 26); $i++) 
-{
-    // Fix for swapped skill numbers
-    if ($i == 47)
-      $s = 48;
-    else if ($i == 48)
-      $s = 47;
-    else
-      $s = $i;	
-    echo <<<EOF
+	$sid = -1;
+	for ($l = 0; $l < 2; $l++) {
+		for ($i = 0 + ($l * 26); $i <= 25 + ($l * 26); $i++) {
+			// Fix for swapped skill numbers
+			if ($i == 47)
+				$s = 48;
+			else if ($i == 48)
+				$s = 47;
+			else
+				$s = $i;
+			echo <<<EOF
             <tr> 
               <td>
                 <font face="Verdana" size="-1"><a href="http://guide.uo.com/skill_$s.html">$skillnames[$i]</a></font>
@@ -120,32 +115,28 @@ for ($l = 0; $l < 2; $l++)
                 <font face="Verdana" size="-1">&nbsp;&nbsp;
 
 EOF;
-    if ($sid < $i) 
-{
-      if ($row = mysql_fetch_row($result)) 
-{
-        $sid = intval($row[0]);
-        $val = sprintf("%0.1f", $row[1] /*/ $nc*/ / 10);
-      }
-      else
-        $sid = 99;
-    }
-    if ($i == $sid)
-      echo "$val";
-    else
-      echo "0";
+			if ($sid < $i) {
+				if ($row = mysql_fetch_row($result)) {
+					$sid = intval($row[0]);
+					$val = sprintf("%0.1f", $row[1] /*/ $nc*/ / 10);
+				} else
+					$sid = 99;
+			}
+			if ($i == $sid)
+				echo "$val";
+			else
+				echo "0";
 
-    echo <<<EOF
+			echo <<<EOF
                 </font>
               </td>
             </tr>
 
 EOF;
-}
+		}
 
-  if (!$l) 
-{
-    echo <<<EOF
+		if (!$l) {
+			echo <<<EOF
           </tbody>
         </table>
       </td>
@@ -154,18 +145,17 @@ EOF;
           <tbody>
 
 EOF;
-    }
-  }
-}
-else 
-echo "This character has chosen to not display $sex1 skills.";
+		}
+	}
+} else
+	echo "This character has chosen to not display $sex1 skills.";
 mysql_free_result($result);
 mysql_close($link);
 
 if ($timestamp != "")
-  $dt = date("F j, Y, g:i a", strtotime($timestamp));
+	$dt = date("F j, Y, g:i a", strtotime($timestamp));
 else
-  $dt = date("F j, Y, g:i a");
+	$dt = date("F j, Y, g:i a");
 
 echo <<<EOF
           </tbody>

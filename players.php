@@ -9,17 +9,17 @@ $tp = intval($tp);
 
 check_get($fn, "fn");
 if ($fn != "")
-  $where = "WHERE char_name LIKE '" . addslashes($fn) . "%'";
+	$where = "WHERE char_name LIKE '" . addslashes($fn) . "%'";
 else
-  $where = "";
+	$where = "";
 
 $link = sql_connect();
 
 // Total public players
 if ($where != "")
-  $wherep = $where." AND char_public=1";
+	$wherep = $where . " AND char_public=1";
 else
-  $wherep = "WHERE char_public=1";
+	$wherep = "WHERE char_public=1";
 $result = sql_query($link, "SELECT COUNT(*) FROM myrunuo_characters $wherep");
 list($totalpublic) = mysql_fetch_row($result);
 $totalpublic = intval($totalpublic);
@@ -34,7 +34,7 @@ mysql_free_result($result);
 // Player timestamp
 $result = sql_query($link, "SELECT time_datetime FROM myrunuo_timestamps WHERE time_type='Char'");
 if (!(list($timestamp) = mysql_fetch_row($result)))
-  $timestamp = "";
+	$timestamp = "";
 mysql_free_result($result);
 
 echo <<<EOF
@@ -53,7 +53,7 @@ echo <<<EOF
 
 <div align="center"> 
  
-<div id="banner"><img src="../images/banner.jpg"></div>  
+<div id="banner"><img src="./images/banner.jpg"></div>
 <div id="container"> 
 <div id="main"> 
 	<div id="sideNavi"> 
@@ -61,15 +61,12 @@ echo <<<EOF
 <ul> 
 	<li class="navigation"><a href="index.php">Statistics</a> 
 		<ul> 
-			<!--<li class="navigation"><a href="/factions/">Factions</a></li> -->
-                     <li class="navigation"><a href="status.php">Online Players</a></li>
+			<li class="navigation"><a href="status.php">Online Players</a></li>
 			<li class="navigation"><a href="players.php">Players</a></li> 
 			<li class="navigation"><a href="guilds.php">Guilds</a></li> 
 			<li class="navigation"><a href="dueling.php">Dueling</a></li>
 			<li class="navigation"><a href="bounties.php?sortby=Bounty&flip=1">Bounties</a></li>
 			<li class="navigation"><a href="bulletinboard.php">Bulletin Posts</a></li>
-			<!--<li class="navigation"><a href="http://videos.uogamers.com/">Videos</a></li>
-			<li class="navigation"><a href="http://poker.uogamers.com/">Poker</a></li> --> 
 		</ul> 
 		</ul> 
 	</li> 
@@ -176,24 +173,23 @@ echo <<<EOF
 EOF;
 
 if ($tp - $players_perpage >= 0) {
-  $num = $tp - $players_perpage;
-  echo "        <a href=\"players.php?tp=$num&fn=$fn\"><img src=\"images/items/back.jpg\" border=\"0\"></a>\n";
-}
-else
-  echo "        &nbsp; &nbsp;";
+	$num = $tp - $players_perpage;
+	echo "        <a href=\"players.php?tp=$num&fn=$fn\"><img src=\"images/items/back.jpg\" border=\"0\"></a>\n";
+} else
+	echo "        &nbsp; &nbsp;";
 
 $page = intval($tp / $players_perpage) + 1;
 $pages = ceil($totalplayers / $players_perpage);
 if ($pages > 1)
-  echo " <font size=\"-1\" face=\"Verdana\">Page [$page/$pages]</font> ";
+	echo " <font size=\"-1\" face=\"Verdana\">Page [$page/$pages]</font> ";
 
 // Players
 $result = sql_query($link, "SELECT char_id,char_name,char_nototitle,char_public,accesslevel FROM myrunuo_characters $where ORDER by char_name LIMIT $tp,$players_perpage");
 $num = mysql_numrows($result);
 
 if ($tp + $players_perpage < $totalplayers) {
-  $num = $tp + $players_perpage;
-  echo "        <a href=\"players.php?tp=$num&fn=$fn\"><img src=\"images/items/next.jpg\" border=\"0\"></a>\n";
+	$num = $tp + $players_perpage;
+	echo "        <a href=\"players.php?tp=$num&fn=$fn\"><img src=\"images/items/next.jpg\" border=\"0\"></a>\n";
 }
 
 echo <<<EOF
@@ -206,33 +202,26 @@ echo <<<EOF
 EOF;
 
 if ($num) {
-  while ($row = mysql_fetch_row($result)) {
-    $id = $row[0];
-    $charname = $row[1];
-    $temp = $row[2];
-    $accesslevel = $row[4];
-    if ($accesslevel == 4)
-{
-       $charname =  "*Admin"." ".$row[1];
-	$temp = "*Admin"." ".$row[1];
-}
-else if ($accesslevel == 3)
-{
-       $charname =  "*Seer"." ".$row[1];
-	$temp = "*Seer"." ".$row[1];
-}
-else if ($accesslevel == 2)
-{
-       $charname =  "*GM"." ".$row[1];
-	$temp = "*GM"." ".$row[1];
-}
-else if ($accesslevel == 1)
-{
-       $charname =  "*Counselor"." ".$row[1];
-	$temp = "*Counselor"." ".$row[1];
-}
+	while ($row = mysql_fetch_row($result)) {
+		$id = $row[0];
+		$charname = $row[1];
+		$temp = $row[2];
+		$accesslevel = $row[4];
+		if ($accesslevel == 4) {
+			$charname = "*Admin" . " " . $row[1];
+			$temp = "*Admin" . " " . $row[1];
+		} else if ($accesslevel == 3) {
+			$charname = "*Seer" . " " . $row[1];
+			$temp = "*Seer" . " " . $row[1];
+		} else if ($accesslevel == 2) {
+			$charname = "*GM" . " " . $row[1];
+			$temp = "*GM" . " " . $row[1];
+		} else if ($accesslevel == 1) {
+			$charname = "*Counselor" . " " . $row[1];
+			$temp = "*Counselor" . " " . $row[1];
+		}
 
-    echo <<<EOF
+		echo <<<EOF
           <tr>
             <td width="120">
               <a href="player.php?id=$id">$charname</a>
@@ -243,10 +232,9 @@ else if ($accesslevel == 1)
           </tr>
 
 EOF;
-  }
-}
-else {
-   echo <<<EOF
+	}
+} else {
+	echo <<<EOF
           <tr>
             <td colspan="3">No players could be found.</td>
           </tr>
@@ -265,9 +253,9 @@ mysql_free_result($result);
 mysql_close($link);
 
 if ($timestamp != "")
-  $dt = date("F j, Y, g:i a", strtotime($timestamp));
+	$dt = date("F j, Y, g:i a", strtotime($timestamp));
 else
-  $dt = date("F j, Y, g:i a");
+	$dt = date("F j, Y, g:i a");
 
 echo <<<EOF
   <tr>
