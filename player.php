@@ -149,20 +149,20 @@ if ($id) {
 	</li> 
 </ul> 
 	  </div> 
-	<div class="specialText"><img src="http://my.uoreplay.com/images/nav_footer.jpg" alt="" /></div> 
+	<div class="specialText"><img src="./images/nav_footer.jpg" alt="" /></div>
 	</div> 
 		
 	<div id="content"> 
 		<table width="752" cellpadding="0" cellspacing="0"> 
 		 <tr> 
 		   <td width="173" valign="top" align="right"> 
-		<br /><img src="http://my.uoreplay.com/images/griff_left.jpg" alt="" /> 
+		<br /><img src="./images/griff_left.jpg" alt="" />
 		  </td> 
 		  <td width="404" id="headlines"> 
 		 <br /> 
 		  </td> 
 		  <td width="173" valign="top"> 
-		<br /><img src="http://my.uoreplay.com/images/griff_right_div.jpg" alt="" /> 
+		<br /><img src="./images/griff_right_div.jpg" alt="" />
 		  </td> 
 		 </tr> 
 		</table> 
@@ -242,20 +242,20 @@ EOF;
 	</li> 
 </ul> 
 	  </div> 
-	<div class="specialText"><img src="http://my.uoreplay.com/images/nav_footer.jpg" alt="" /></div> 
+	<div class="specialText"><img src="./images/nav_footer.jpg" alt="" /></div>
 	</div> 
 		
 	<div id="content"> 
 		<table width="752" cellpadding="0" cellspacing="0"> 
 		 <tr> 
 		   <td width="173" valign="top" align="right"> 
-		<br /><img src="http://my.uoreplay.com/images/griff_left.jpg" alt="" /> 
+		<br /><img src="./images/griff_left.jpg" alt="" />
 		  </td> 
 		  <td width="404" id="headlines"> 
 		 <br /> 
 		  </td> 
 		  <td width="173" valign="top"> 
-		<br /><img src="http://my.uoreplay.com/images/griff_right_div.jpg" alt="" /> 
+		<br /><img src="./images/griff_right_div.jpg" alt="" />
 		  </td> 
 		 </tr> 
 		</table> 
@@ -474,7 +474,7 @@ EOF;
  
 <div align="center"> 
 	<div id="footer"> 
-	<img src="http://my.uoreplay.com/images/footer_a.jpg" alt="" /><img src="http://my.uoreplay.com/images/footer_b.jpg" alt="" /><img src="http://my.uoreplay.com/images/footer_c.jpg" alt="" /><img src="http://my.uoreplay.com/images/footer_d.jpg" alt="" /> 
+	<img src="./images/footer_a.jpg" alt="" /><img src="./images/footer_b.jpg" alt="" /><img src="./images/footer_c.jpg" alt="" /><img src="./images/footer_d.jpg" alt="" />
 	</div> 
 </div> 
  

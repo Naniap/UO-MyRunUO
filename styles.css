@@ -27,7 +27,7 @@ images {
 /*body {
 	color: #000000;
 	background: #000000;
-	background-image: url(http://my.uoreplay.com/images/back.jpg);
+	background-image: url(./images/back.jpg);
     font: 12px verdana, arial, sans-serif;
 }*/
 
@@ -237,7 +237,7 @@ fieldset legend {
 }*/
 
 .remote {
-    background-image: url('http://my.uoreplay.com/images/nav_hybrid.jpg');
+    background-image: url('./images/nav_hybrid.jpg');
 }
 
 .section {
@@ -285,51 +285,51 @@ fieldset legend {
 
 .section-tl {
     background-position: top left;
-    background-image: url(http://my.uoreplay.com/images/section-tl.gif);
+    background-image: url(./images/section-tl.gif);
 }
 
 .section-tm {
     background-position: top left;
-    background-image: url(http://my.uoreplay.com/images/section-tm.gif);
+    background-image: url(./images/section-tm.gif);
 }
 
 .section-tr {
     background-position: top right;
-    background-image: url(http://my.uoreplay.com/images/section-tr.gif);
+    background-image: url(./images/section-tr.gif);
 }
 
 .section-ml {
     background-position: top left;
-    background-image: url(http://my.uoreplay.com/images/section-ml.gif);
+    background-image: url(./images/section-ml.gif);
 }
 
 .section-mr {
     background-position: top right;
-    background-image: url(http://my.uoreplay.com/images/section-mr.gif);
+    background-image: url(./images/section-mr.gif);
 }
 
 .section-bl {
     background-position: bottom left;
-    background-image: url(http://my.uoreplay.com/images/section-bl.gif);
+    background-image: url(./images/section-bl.gif);
 }
 
 .section-bm {
     background-position: bottom left;
-    background-image: url(http://my.uoreplay.com/images/section-bm.gif);
+    background-image: url(./images/section-bm.gif);
 }
 
 .section-br {
     background-position: bottom right;
-    background-image: url(http://my.uoreplay.com/images/section-br.gif);
+    background-image: url(./images/section-br.gif);
 }
 
 .section-mm {
     background-position: top left;
-    background-image: url(http://my.uoreplay.com/images/section-mm.gif);
+    background-image: url(./images/section-mm.gif);
 }
 
 .separator {
-    background-image: url(http://my.uoreplay.com/images/separator.gif);
+    background-image: url(./images/separator.gif);
     margin: auto;
     width: 400px;
     height: 45px;

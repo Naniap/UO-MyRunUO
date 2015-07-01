@@ -8,7 +8,7 @@ body {
 }
 
 #main {
-    background-image: url('http://my.uoreplay.com/images/content_bg.jpg');
+    background-image: url('./images/content_bg.jpg');
     background-repeat: repeat-y;
     background-position: center;
     float: left;
@@ -34,7 +34,7 @@ body {
 }
 
 .drop_down {
-    background-image: url('http://my.uoreplay.com/images/dropdown_bg.gif');
+    background-image: url('./images/dropdown_bg.gif');
     background-repeat: no-repeat;
     color: #555555;
     font-family: Georgia, Arial, Helvetica, sans-serif;
@@ -47,7 +47,7 @@ body {
 }
 
 #contentText, .contentText {
-    background-image: url('http://my.uoreplay.com/images/content_text_bg.jpg');
+    background-image: url('./images/content_text_bg.jpg');
     background-repeat: repeat-y;
     background-position: center;
     font-family: Georgia, Arial, Helvetica, sans-serif;
@@ -93,7 +93,7 @@ body {
 }
 
 #sideNavi {
-    background-image: url('http://my.uoreplay.com/images/nav_bg.jpg');
+    background-image: url('./images/nav_bg.jpg');
     background-position: center;
     background-repeat: repeat-y;
     float: left;
@@ -107,7 +107,7 @@ body {
 }
 
 .remote {
-    background-image: url('http://my.uoreplay.com/images/nav_divinity.jpg');
+    background-image: url('./images/nav_divinity.jpg');
     background-position: top center;
     background-repeat: no-repeat;
     padding: 125px 0px 0px 0px;
@@ -152,7 +152,7 @@ body {
 }
 
 .remote a:hover {
-    background-image: url('http://my.uoreplay.com/images/remote_over.gif');
+    background-image: url('./images/remote_over.gif');
     background-position: center;
     background-repeat: no-repeat;
     color: #660000;
@@ -164,7 +164,7 @@ body {
 }
 
 .remote_sub a:link, .remote_sub a:visited, .remote_sub a:active {
-    background-image: url('http://my.uoreplay.com/images/remote_sub_norm.gif');
+    background-image: url('./images/remote_sub_norm.gif');
     color: #FFFFFF;
     display: block;
     font-size: 11px;
@@ -178,7 +178,7 @@ body {
 }
 
 .remote_sub a:hover {
-    background-image: url('http://my.uoreplay.com/images/remote_over.gif');
+    background-image: url('./images/remote_over.gif');
     background-position: center;
     background-repeat: no-repeat;
     color: #660000;
@@ -212,7 +212,7 @@ a:hover {
 }
 
 .headlinesStyle a:link, .headlinesStyle a:visited, .headlinesStyle a:active {
-    background-image: url('http://my.uoreplay.com/images/headline_normal.gif');
+    background-image: url('./images/headline_normal.gif');
     background-repeat: no-repeat;
     background-position: center bottom;
     color: #000000;
