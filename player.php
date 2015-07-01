@@ -130,7 +130,7 @@ if ($id) {
 <ul> 
 	<li class="navigation"><a href="index.php">Statistics</a> 
 		<ul>
-            			<li class="navigation"><a href="status.php">Online Players</a></li>
+            <li class="navigation"><a href="status.php">Online Players</a></li>
 			<li class="navigation"><a href="players.php">Players</a></li> 
 			<li class="navigation"><a href="guilds.php">Guilds</a></li> 
 			<li class="navigation"><a href="dueling.php">Dueling</a></li>
@@ -310,10 +310,6 @@ html;
 
 			echo <<<EOF
     <tr><td><label for="skill-value-$num">$name</label></td><td id="skill-value-$num" align="right">$skill</td></tr>
-     <!-- <td align="center" valign="top">
-	 <table><font face="Arial" size="2">$name: $skill</font></table>
-    </td> -->
-
 EOF;
 
 			$skillsum += $skill;
@@ -392,50 +388,7 @@ EOF;
 	</tr> 
 	<tr><td class="section-bl"></td><td class="section-bm"></td><td class="section-br"></td></tr> 
 </table>						<div class="separator"></div> 
-<!-- <table cellpadding="0" cellspacing="0" class="section"> 
-	<tr><td class="section-tl"></td><td class="section-tm"></td><td class="section-tr"></td></tr> 
-	<tr> 
-		<td class="section-ml"></td> 
-		<td class="section-mm">						
-						<fieldset> 
-							 <legend>Videos</legend> 
-							<table cellpadding="3" cellspacing="1"> 
-								<tr> 
-									<td align="right">1.</td> 
-									<td><a href="http://videos.uogamers.com/view.php?videoId=366436">1v1 Mage 5x</a></td> 
-								</tr> 
-								<tr> 
-									<td align="right">2.</td> 
-									<td><a href="http://videos.uogamers.com/view.php?videoId=366413">1v1 Mage 5x</a></td> 
-								</tr> 
-								<tr> 
-									<td align="right">3.</td> 
-									<td><a href="http://videos.uogamers.com/view.php?videoId=366407">1v1 Mage 5x</a></td> 
-								</tr> 
-								<tr> 
-									<td align="right">4.</td> 
-									<td><a href="http://videos.uogamers.com/view.php?videoId=366404">1v1 Mage 5x</a></td> 
-								</tr> 
-								<tr> 
-									<td align="right">5.</td> 
-									<td><a href="http://videos.uogamers.com/view.php?videoId=366402">1v1 Mage 5x</a></td> 
-								</tr> 
-								<tr> 
-									<td align="right">6.</td> 
-									<td><a href="http://videos.uogamers.com/view.php?videoId=366388">1v1 Mage 5x</a></td> 
-								</tr> 
-								<tr> 
-									<td align="right">7.</td> 
-									<td><a href="http://videos.uogamers.com/view.php?videoId=366066">1v1 Mage 5x</a></td> 
-								</tr> 
-							</table> 
-						</fieldset> 
-						 
-		</td> 
-		<td class="section-mr"></td> 
-	</tr> 
-	<tr><td class="section-bl"></td><td class="section-bm"></td><td class="section-br"></td></tr> 
-</table>	-->				</td> 
+			</td>
 					<td valign="top" style="width: 314px"> 
 						<div class="player-view"> 
 							<!-- paperdoll --> 
@@ -447,59 +400,28 @@ EOF;
 			</table> 
 		</td> 
 	</tr> 
-</table> 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
+</table>
 </div> 
-</div> 
-	  
-</div> 
- 
+</div>
+</div>
 <div align="center"> 
 	<div id="footer"> 
 	<img src="./images/footer_a.jpg" alt="" /><img src="./images/footer_b.jpg" alt="" /><img src="./images/footer_c.jpg" alt="" /><img src="./images/footer_d.jpg" alt="" />
 	</div> 
-</div> 
- 
-</div> 
+</div>
+</div>
 html;
 
 	while ($num < 3) {
 		echo "    <td>&nbsp;</td>\n";
 		$num++;
 	}
-
 	echo "  </tr>\n";
-	/*$result = sql_query($link, "SELECT myrunuo_guilds.guild_id,myrunuo_guilds.guild_name FROM myrunuo_characters INNER JOIN myrunuo_guilds ON myrunuo_characters.char_guild=myrunuo_guilds.guild_id WHERE myrunuo_characters.char_id=$id");
-	  if (list($gid,$guild) = mysql_fetch_row($result)) {
-		$gid = intval($gid);*/
-	echo <<<EOF
-<!--  <tr>
-    <td align="center" colspan="3">
-      <br><font face="Verdana, Arial" color="#000000" size="2"><b>Guild:</b> &nbsp; &nbsp;<a href="guild.php?id=$gid" style="color: Black">$guild</a></font>
-    </td>
-  </tr> -->
-
-EOF;
 }
 
 mysql_close($link);
-
-
-echo <<<EOF
+?>
 </table>
 </body>
 </center>
 </html>
-
-EOF;
-
-?>
