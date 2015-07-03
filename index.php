@@ -1,46 +1,44 @@
 <?php
 
-require("myrunuo.inc.php");
+include_once "SQL.php";
 
-$link = sql_connect();
-$result = sql_query($link, "SELECT COUNT(*) FROM myrunuo_characters"); // adds number of players
-list($numchars) = mysql_fetch_row($result);
-$numchars = intval($numchars);
-mysql_free_result($result);
-if ($numchars == 1)
-	$players = "character";
-else
-	$players = "characters";
+function checkPlural($number, $text)
+{
+	if ($number == 1)
+		return $number . " $text";
+	else
+		return number_format($number) . " $text" . "s";
+}
 
-$result = sql_query($link, "SELECT COUNT(*) FROM myrunuo_guilds"); // adds number of guilds
-list($numguilds) = mysql_fetch_row($result);
-$numguilds = intval($numguilds);
-mysql_free_result($result);
-//proper punctuation
-if ($numguilds == 1)
-	$guild = "guild";
-else
-	$guild = "guilds";
+$sql = SQL::getConnection();
 
-$result = sql_query($link, "SELECT items,mobiles,uptime,accounts FROM myrunuo_statistics"); //Retrieves information on Items
-if (!(list($items, $mobiles, $uptime, $accounts) = mysql_fetch_row($result)))
-	mysql_free_result($result);
+$result = $sql->query("SELECT COUNT(*) FROM myrunuo_characters");
+$row = $result->fetch_row();
+$numChars = checkPlural($row[0], "character");
 
-$result = sql_query($link, "SELECT update_time
-FROM information_schema.tables
-WHERE TABLE_SCHEMA = 'myrunuo' AND TABLE_NAME = 'myrunuo_statistics' AND update_time > (NOW() - INTERVAL 5 MINUTE);");
-if (!(list($tableuptime) = mysql_fetch_row($result)))
-	mysql_free_result($result);
+$result = $sql->query("SELECT COUNT(*) FROM myrunuo_guilds"); // adds number of guilds
+$row = $result->fetch_row();
+$numGuilds = checkPlural($row[0], "guild");
+
+$result = $sql->query("SELECT items, mobiles, uptime, accounts FROM myrunuo_statistics");
+$row = $result->fetch_assoc();
+$numItems = checkPlural($row["items"], "item");
+$numMobiles = checkPlural($row["mobiles"], "mobile");
+$uptime = $row["uptime"];
+$numAccounts = checkPlural($row["accounts"], "account");
+
+$result = $sql->query("SELECT update_time FROM information_schema.tables WHERE TABLE_SCHEMA = 'myrunuo' AND TABLE_NAME = 'myrunuo_statistics' AND update_time > (NOW() - INTERVAL 5 MINUTE);");
+if (!(list($tableuptime) = $result->fetch_row()))
+	$result->free_result();
+
 $currentDate = strtotime($tableuptime);
 $futureDate = $currentDate + (70 * 5);
 $formatDate = date("Y-m-d H:i:s", $futureDate);
 if (date("Y-m-d H:i:s") > $formatDate)
 	$uptime = "The server is currently down.";
-$result = sql_query($link, "SELECT time_datetime FROM myrunuo_timestamps WHERE time_type='Status'");
-if (!(list($timestamp) = mysql_fetch_row($result)))
+$result = $sql->query("SELECT time_datetime FROM myrunuo_timestamps WHERE time_type='Status'");
+if (!(list($timestamp) = $result->fetch_row()))
 	$timestamp = "";
-mysql_free_result($result);
-mysql_close($link);
 if ($timestamp != "")
 	$dt = date("F j, Y, g:i a", strtotime($timestamp));
 else
@@ -107,7 +105,7 @@ echo <<<EOF
 	<tr> 
 		<td class="section-ml"></td> 
 		<td class="section-mm"><h2>UO: Replay</h2> 
-<p>Currently tracking $numchars $players and $numguilds $guild. There are currently $accounts accounts, $items items, and $mobiles mobiles spawned in the world.<br>The current uptime is: $uptime </p>  
+<p>Currently tracking $numChars and $numGuilds. There are currently $numAccounts, $numItems, and $numMobiles spawned in the world.<br>The current uptime is: $uptime </p>
 <font face="Verdana" color="#000000" size="-1"><b>Last Updated:</b> $dt</font>
 	
 </td> 

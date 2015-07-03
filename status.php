@@ -1,79 +1,66 @@
 <?php
 
-require("myrunuo.inc.php");
+include_once "SQL.php";
 
-check_get($tp, "tp");
-$tp = intval($tp);
+if (!isset($_GET['tp']))
+	$tp = 0;
+else
+	$tp = $_GET['tp'];
 
-check_get($flip, "flip");
-if ($flip)
+if (!isset($_GET['tp']))
 	$sw = "desc";
 else
 	$sw = "";
 
-check_get($sortby, "sortby");
-$s = $sortby;
+if (!isset($_GET["sortby"]))
+	$sortBy = "name";
+else
+	$sortBy = $_GET["sortby"];
+$s = $sortBy;
 switch (strtolower($s)) {
 	case "kills":
-		$sortby = "char_counts";
+		$sortBy = "char_counts";
 		break;
 	case "karma":
-		$sortby = "char_karma";
+		$sortBy = "char_karma";
 		break;
 	case "fame":
-		$sortby = "char_fame";
+		$sortBy = "char_fame";
 		break;
 	default: // name
-		$sortby = "char_name";
+		$sortBy = "char_name";
 }
 
-$link = sql_connect();
-/*
-$ts_ip = "uoreplay.com"; // Change to your server's IP external or domain name
-$ts_port = "2593"; // Make sure this port is open on the router or firewall
-
-$output = @fsockopen("$ts_ip", $ts_port, $errno, $errstr, 2);
-//socket_set_timeout($output, 000002);
-
-if (!$output) {
-    $output1 = "<h1><FONT COLOR=#DD0000><B>The server is offline.</h1></B></FONT>";
-} else {
-    $output1 = "<h1><FONT COLOR=#00DD00><B>The server is online.</h1></B></FONT>";
-}*/
+$sql = SQL::getConnection();
 
 // Status timestamp
-$result = sql_query($link, "SELECT time_datetime FROM myrunuo_timestamps WHERE time_type='Status'");
-if (!(list($timestamp) = mysql_fetch_row($result)))
-	$timestamp = "";
-mysql_free_result($result);
+$result = $sql->query("SELECT time_datetime FROM myrunuo_timestamps WHERE time_type='Status'");
+$row = $result->fetch_assoc();
+$timestamp = $row["time_datetime"];
 
-$nflip = $cflip = $kflip = $fflip = 0;
+$flip = $nflip = $cflip = $kflip = $fflip = 0;
 if (!$flip) {
-	if ($sortby == "char_name")
+	if ($sortBy == "char_name")
 		$nflip = 1;
-	else if ($sortby == "char_counts")
+	else if ($sortBy == "char_counts")
 		$cflip = 1;
-	else if ($sortby == "char_karma")
+	else if ($sortBy == "char_karma")
 		$kflip = 1;
-	else if ($sortby == "char_fame")
+	else if ($sortBy == "char_fame")
 		$fflip = 1;
 }
 // Get total online player count
-$result = sql_query($link, "SELECT COUNT(*) FROM myrunuo_status");
-if (!$result) {
-	echo "Database error.<br>\n";
-	exit;
-}
-list($totalplayers) = mysql_fetch_row($result);
-mysql_free_result($result);
+$result = $sql->query("SELECT COUNT(*) FROM myrunuo_status");
+$row = $result->fetch_row();
+$totalPlayers = $row[0];
 
 // Get status and total online players (non-staff)
-$result = sql_query($link, "SELECT myrunuo_status.char_id,char_karma,char_fame,char_name,char_nototitle,char_counts,char_public
+$result = $sql->query("
+					SELECT myrunuo_status.char_id, char_karma, char_fame, char_name, char_nototitle, char_counts
                     FROM myrunuo_status
                     LEFT JOIN myrunuo_characters ON myrunuo_characters.char_id=myrunuo_status.char_id
                     WHERE char_name<>''
-                    ORDER BY $sortby $sw LIMIT $tp,$status_perpage");
-
+                    ORDER BY $sortBy $sw LIMIT $tp, " . SQL::STATUSPERPAGE);
 echo <<<EOF
 <!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
 
@@ -134,7 +121,7 @@ echo <<<EOF
 	<tr> 
 		<td class="section-ml"></td> 
 		<td class="section-mm">
-<font face="Verdana" size="2">Online players: $totalplayers<br></font>
+<font face="Verdana" size="2">Online players: $totalPlayers<br></font>
 <table width="640">
   <tr bgcolor="#32605e">
      <td width="150">
@@ -156,19 +143,19 @@ echo <<<EOF
 
 EOF;
 
-if ($tp - $status_perpage >= 0) {
-	$num = $tp - $status_perpage;
+if ($tp - SQL::STATUSPERPAGE >= 0) {
+	$num = $tp - SQL::STATUSPERPAGE;
 	echo "        <a href=\"status.php?tp=$num&sortby=$s\"><img src=\"images/items/back.jpg\" border=\"0\"></a>\n";
 } else
 	echo "        &nbsp; &nbsp;";
 
-$page = intval($tp / $status_perpage) + 1;
-$pages = ceil($totalplayers / $status_perpage);
+$page = intval($tp / SQL::STATUSPERPAGE) + 1;
+$pages = ceil($totalPlayers / SQL::STATUSPERPAGE);
 if ($pages > 1)
 	echo " <font size=\"-1\" face=\"Verdana\">Page [$page/$pages]</font> ";
 
-if ($tp + $status_perpage < $totalplayers) {
-	$num = $tp + $status_perpage;
+if ($tp + SQL::STATUSPERPAGE < $totalPlayers) {
+	$num = $tp + SQL::STATUSPERPAGE;
 	echo "        <a href=\"status.php?tp=$num&sortby=$s\"><img src=\"images/items/next.jpg\" border=\"0\"></a>\n";
 }
 
@@ -179,20 +166,20 @@ echo <<<EOF
 EOF;
 
 $num = 0;
-if ($totalplayers) {
+if ($totalPlayers) {
 	while ($row = mysql_fetch_row($result)) {
-		$id = $row[0];
-		$karma = $row[1];
-		$fame = $row[2];
-		$charname = $row[3];
-		$title = $row[4];
-		$kills = $row[5];
+		$id = $row['char_id'];
+		$karma = $row['char_karma'];
+		$fame = $row['char_fame'];
+		$charName = $row['char_name'];
+		$title = $row['char_nototitle'];
+		$kills = $row["char_counts"];
 
-		if ($charname != "") {
+		if ($charName != "") {
 			echo <<<EOF
   <tr>
     <td>
-      <font face="Verdana" size="2"><a href="player.php?id=$id">$charname</a></font>
+      <font face="Verdana" size="2"><a href="player.php?id=$id">$charName</a></font>
     </td>
     <td>
       <font face="Verdana" size="2">$title</font>
@@ -224,9 +211,6 @@ if (!$num) {
 
 EOF;
 }
-
-mysql_free_result($result);
-mysql_close($link);
 
 if ($timestamp != "")
 	$dt = date("F j, Y, g:i a", strtotime($timestamp));

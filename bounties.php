@@ -1,74 +1,68 @@
 <?php
 
-require("myrunuo.inc.php");
+include_once "SQL.php";
 
-check_get($tp, "tp");
-$tp = intval($tp);
+if (!isset($_GET["tp"]))
+	$tp = 0;
+else
+	$tp = $_GET["tp"];
 
-check_get($flip, "flip");
+$flip = $_GET["flip"];
 if ($flip)
 	$sw = "desc";
 else
 	$sw = "";
-
-check_get($sortby, "sortby");
-$s = $sortby;
-switch (strtolower($s)) {
+if (!isset($_GET["sortby"]))
+	$sortBy = "bounty";
+else
+	$sortBy = $_GET["sortby"];
+switch (strtolower($sortBy)) {
 	case "name":
-		$sortby = "char_name";
+		$sortBy = "char_name";
 		break;
 	case "kills":
-		$sortby = "char_counts";
+		$sortBy = "char_counts";
 		break;
 	case "bounty":
-		$sortby = "bounty";
+		$sortBy = "bounty";
 		break;
 	case "guild":
-		$sortby = "char_guild";
+		$sortBy = "char_guild";
 		break;
 	default: // name
-		$sortby = "bounty";
+		$sortBy = "bounty";
 }
 
-$link = sql_connect();
+$sql = SQL::getConnection();
 
 // Status timestamp
-$result = sql_query($link, "SELECT time_datetime FROM myrunuo_timestamps WHERE time_type = 'Char'");
-if (!(list($timestamp) = mysql_fetch_row($result)))
-	$timestamp = "";
-mysql_free_result($result);
+$result = $sql->query("SELECT time_datetime FROM myrunuo_timestamps WHERE time_type = 'Char'");
+$row = $result->fetch_assoc();
+$timestamp = $row["time_datetime"];
+
 
 $nflip = $cflip = $fflip = $gflip = 0;
 if (!$flip) {
-	if ($sortby == "char_name")
+	if ($sortBy == "char_name")
 		$nflip = 1;
-	else if ($sortby == "char_counts")
+	else if ($sortBy == "char_counts")
 		$cflip = 1;
-	else if ($sortby == "bounty")
+	else if ($sortBy == "bounty")
 		$fflip = 1;
-	else if ($sortby == "char_guild")
+	else if ($sortBy == "char_guild")
 		$gflip = 1;
 }
 // Get total online player count
-$result = sql_query($link, "SELECT COUNT(*) FROM myrunuo_characters");
-if (!$result) {
-	echo "Database error.<br>\n";
-	exit;
-}
-list($totalplayers) = mysql_fetch_row($result);
-mysql_free_result($result);
+$result = $sql->query("SELECT COUNT(*) FROM myrunuo_characters");
+$row = $result->fetch_row();
+$totalPlayers = $row[0];
 
 // Get status and total online players (non-staff)
-/*$result = sql_query($link, "SELECT myrunuo_status.char_id,char_karma,char_fame,char_name,char_nototitle,char_counts,char_public,rank,level,wins,losses
-                    FROM myrunuo_status
-                    LEFT JOIN myrunuo_characters ON myrunuo_characters.char_id=myrunuo_status.char_id
-                    WHERE char_name<>''
-                    ORDER BY $sortby $sw LIMIT $tp,$status_perpage");*/
-$result = sql_query($link, "SELECT char_name, char_counts, bounty, char_id, char_guild, myrunuo_guilds.guild_abbreviation
+$result = $sql->query("
+			SELECT char_name, char_counts, bounty, char_id, char_guild, myrunuo_guilds.guild_abbreviation
 			FROM myrunuo_characters
 			LEFT JOIN myrunuo_guilds ON myrunuo_characters.char_guild = myrunuo_guilds.guild_id
-                    ORDER BY $sortby $sw LIMIT $tp,$status_perpage");
-
+			ORDER BY $sortBy $sw LIMIT $tp, " . SQL::STATUSPERPAGE);
 echo <<<EOF
 <!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
 
@@ -142,19 +136,19 @@ echo <<<EOF
 
 EOF;
 
-if ($tp - $status_perpage >= 0) {
-	$num = $tp - $status_perpage;
+if ($tp - SQL::STATUSPERPAGE >= 0) {
+	$num = $tp - SQL::STATUSPERPAGE;
 	echo "        <a href=\"bounties.php?tp=$num&sortby=$s\"><img src=\"images/items/back.jpg\" border=\"0\"></a>\n";
 } else
 	//echo "        &nbsp; &nbsp;";
 
-	$page = intval($tp / $status_perpage) + 1;
-$pages = ceil($totalplayers / $status_perpage);
+	$page = intval($tp / SQL::STATUSPERPAGE) + 1;
+$pages = ceil($totalPlayers / SQL::STATUSPERPAGE);
 if ($pages > 1)
 	echo " <font size=\"-1\" face=\"Verdana\">Page [$page/$pages]</font> ";
 
-if ($tp + $status_perpage < $totalplayers) {
-	$num = $tp + $status_perpage;
+if ($tp + SQL::STATUSPERPAGE < $totalPlayers) {
+	$num = $tp + SQL::STATUSPERPAGE;
 	echo "        <a href=\"bounties.php?tp=$num&sortby=$s\"><img src=\"images/items/next.jpg\" border=\"0\"></a>\n";
 }
 
@@ -166,42 +160,36 @@ EOF;
 
 $num = 0;
 
-if ($totalplayers) {
-	while ($row = mysql_fetch_row($result)) {
-		$charname = $row[0];
-		$kills = $row[1];
-		$bounty = number_format($row[2]);
-		$id = $row[3];
-		$guildid = $row[4];
-		$guild = $row[5];
+if ($totalPlayers) {
+	while ($row = $result->fetch_assoc()) {
+		$charName = $row["char_name"];
+		$counts = $row["char_counts"];
+		$bounty = number_format($row["bounty"]);
+		$id = $row["char_id"];
+		$guildId = $row["char_guild"];
+		$guild = $row["guild_abbreviation"];
 
 
-		if ($guildid >= 1 && $guild == "")
+		if ($guildId >= 1 && $guild == "")
 			$guild = "[none]";
-		else if ($guildid >= 1)
+		else if ($guildId >= 1)
 			$guild = "[" . $guild . "]";
 
-		if ($charname != "" && $bounty > 0) {
+		if ($charName != "" && $bounty > 0) {
 			echo <<<EOF
   <tr>
     <td>
-      <font face="Verdana" size="2"><center>$kills</center></font>
+      <font face="Verdana" size="2"><center>$counts</center></font>
     </td>
-    <!--<td>
-      <font face="Verdana" size="2"><center>$level</center></font>
-    </td>-->
     <td align="right">
-      <font face="Verdana" size="2"><center><a href="guild.php?id=$guildid">$guild</a></center></font>
+      <font face="Verdana" size="2"><center><a href="guild.php?id=$guildId">$guild</a></center></font>
     </td>
     <td align="left">
-      <font face="Verdana" size="2"><a href="player.php?id=$id">$charname</a></font>
+      <font face="Verdana" size="2"><a href="player.php?id=$id">$charName</a></font>
     </td>
     <td align="right">
       <font face="Verdana" size="2"><center>$bounty</center></font>
     </td>
-    <!--<td align="right">
-      <font face="Verdana" size="2"><center>$losses</center></font>
-    </td>-->
   </tr>
 
 EOF;
@@ -220,10 +208,6 @@ if (!$num) {
 
 EOF;
 }
-
-mysql_free_result($result);
-mysql_close($link);
-
 if ($timestamp != "")
 	$dt = date("F j, Y, g:i a", strtotime($timestamp));
 else

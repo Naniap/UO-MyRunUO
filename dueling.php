@@ -1,6 +1,6 @@
 <?php
 
-require("myrunuo.inc.php");
+include_once "SQL.php";
 
 check_get($tp, "tp");
 $tp = intval($tp);
@@ -11,29 +11,31 @@ if ($flip)
 else
 	$sw = "";
 
-check_get($sortby, "sortby");
-$s = $sortby;
-switch (strtolower($s)) {
+if (!isset($_GET["sortby"]))
+	$sortBy = "rank";
+else
+	$sortBy = $_GET["sortby"];
+switch (strtolower($sortBy)) {
 	case "name":
-		$sortby = "char_name";
+		$sortBy = "char_name";
 		break;
 	case "rank":
-		$sortby = "rank";
+		$sortBy = "rank";
 		break;
 	case "level":
-		$sortby = "level";
+		$sortBy = "level";
 		break;
 	case "wins":
-		$sortby = "wins";
+		$sortBy = "wins";
 		break;
 	case "losses":
-		$sortby = "losses";
+		$sortBy = "losses";
 		break;
 	case "guild":
-		$sortby = "char_guild";
+		$sortBy = "char_guild";
 		break;
 	default: // name
-		$sortby = "rank";
+		$sortBy = "rank";
 }
 
 $link = sql_connect();
@@ -46,17 +48,17 @@ mysql_free_result($result);
 
 $nflip = $cflip = $kflip = $fflip = $lflip = $gflip = 0;
 if (!$flip) {
-	if ($sortby == "char_name")
+	if ($sortBy == "char_name")
 		$nflip = 1;
-	else if ($sortby == "rank")
+	else if ($sortBy == "rank")
 		$cflip = 1;
-	else if ($sortby == "level")
+	else if ($sortBy == "level")
 		$kflip = 1;
-	else if ($sortby == "wins")
+	else if ($sortBy == "wins")
 		$fflip = 1;
-	else if ($sortby == "losses")
+	else if ($sortBy == "losses")
 		$lflip = 1;
-	else if ($sortby == "guild")
+	else if ($sortBy == "guild")
 		$gflip = 1;
 }
 // Get total online player count
@@ -73,11 +75,11 @@ mysql_free_result($result);
                     FROM myrunuo_status
                     LEFT JOIN myrunuo_characters ON myrunuo_characters.char_id=myrunuo_status.char_id
                     WHERE char_name<>''
-                    ORDER BY $sortby $sw LIMIT $tp,$status_perpage");*/
+                    ORDER BY $sortBy $sw LIMIT $tp,$status_perpage");*/
 $result = sql_query($link, "SELECT char_name, rank, level, wins, losses, char_id, char_guild, myrunuo_guilds.guild_abbreviation
 			FROM myrunuo_characters
 			LEFT JOIN myrunuo_guilds ON myrunuo_characters.char_guild = myrunuo_guilds.guild_id
-                    ORDER BY $sortby $sw LIMIT $tp,$status_perpage");
+                    ORDER BY $sortBy $sw LIMIT $tp,$status_perpage");
 
 echo <<<EOF
 <!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">

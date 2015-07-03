@@ -1,41 +1,45 @@
 <?php
 
-require("myrunuo.inc.php");
+include_once "SQL.php";
 
 $sText = "Black";
 
-check_get($tp, "tp");
-$tp = intval($tp);
+if (!isset($_GET["tp"]))
+	$tp = 0;
+else
+	$tp = $_GET["tp"];
 
-check_get($fn, "fn");
+if (!isset($_GET["fn"]))
+	$fn = "";
+else
+	$fn = $_GET["fn"];
+
 if ($fn != "")
 	$where = "WHERE char_name LIKE '" . addslashes($fn) . "%'";
 else
 	$where = "";
 
-$link = sql_connect();
+$sql = SQL::getConnection();
 
 // Total public players
 if ($where != "")
 	$wherep = $where . " AND char_public=1";
 else
 	$wherep = "WHERE char_public=1";
-$result = sql_query($link, "SELECT COUNT(*) FROM myrunuo_characters $wherep");
-list($totalpublic) = mysql_fetch_row($result);
-$totalpublic = intval($totalpublic);
-mysql_free_result($result);
+$result = $sql->query("SELECT COUNT(*) FROM myrunuo_characters $wherep");
+$row = $result->fetch_row();
+$totalPublic = $row[0];
 
 // Total players
-$result = sql_query($link, "SELECT COUNT(*) FROM myrunuo_characters $where");
-list($totalplayers) = mysql_fetch_row($result);
-$totalplayers = intval($totalplayers);
-mysql_free_result($result);
+$result = $sql->query("SELECT COUNT(*) FROM myrunuo_characters $where");
+$row = $result->fetch_row();
+$totalPlayers = $row[0];
 
 // Player timestamp
-$result = sql_query($link, "SELECT time_datetime FROM myrunuo_timestamps WHERE time_type='Char'");
-if (!(list($timestamp) = mysql_fetch_row($result)))
-	$timestamp = "";
-mysql_free_result($result);
+$result = $sql->query("SELECT time_datetime FROM myrunuo_timestamps WHERE time_type='Char'");
+$row = $result->fetch_assoc();
+$timestamp = $row["time_datetime"];
+
 
 echo <<<EOF
 <!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -164,7 +168,7 @@ echo <<<EOF
     </tr>
     <tr> 
       <td align="left" colspan="3" bgcolor="#32605e">
-        <font color=white>&nbsp;&nbsp;<b>Total Players:</b> $totalplayers &nbsp;<b>Total Public Players:</b> $totalpublic</font>
+        <font color=white>&nbsp;&nbsp;<b>Total Players:</b> $totalPlayers &nbsp;<b>Total Public Players:</b> $totalPublic</font>
       </td>
     </tr>
     <tr>
@@ -172,23 +176,23 @@ echo <<<EOF
 
 EOF;
 
-if ($tp - $players_perpage >= 0) {
-	$num = $tp - $players_perpage;
+if ($tp - SQL::PLAYERSPERPAGE >= 0) {
+	$num = $tp - SQL::PLAYERSPERPAGE;
 	echo "        <a href=\"players.php?tp=$num&fn=$fn\"><img src=\"images/items/back.jpg\" border=\"0\"></a>\n";
 } else
 	echo "        &nbsp; &nbsp;";
 
-$page = intval($tp / $players_perpage) + 1;
-$pages = ceil($totalplayers / $players_perpage);
+$page = intval($tp / SQL::PLAYERSPERPAGE) + 1;
+$pages = ceil($totalPlayers / SQL::PLAYERSPERPAGE);
 if ($pages > 1)
 	echo " <font size=\"-1\" face=\"Verdana\">Page [$page/$pages]</font> ";
 
 // Players
-$result = sql_query($link, "SELECT char_id,char_name,char_nototitle,char_public,accesslevel FROM myrunuo_characters $where ORDER by char_name LIMIT $tp,$players_perpage");
-$num = mysql_numrows($result);
+$result = $sql->query("SELECT char_id, char_name, char_nototitle, char_public, accesslevel FROM myrunuo_characters $where ORDER by char_name LIMIT $tp, " . SQL::PLAYERSPERPAGE);
+$num = $result->num_rows;
 
-if ($tp + $players_perpage < $totalplayers) {
-	$num = $tp + $players_perpage;
+if ($tp + SQL::PLAYERSPERPAGE < $totalPlayers) {
+	$num = $tp + SQL::PLAYERSPERPAGE;
 	echo "        <a href=\"players.php?tp=$num&fn=$fn\"><img src=\"images/items/next.jpg\" border=\"0\"></a>\n";
 }
 
@@ -202,32 +206,28 @@ echo <<<EOF
 EOF;
 
 if ($num) {
-	while ($row = mysql_fetch_row($result)) {
-		$id = $row[0];
-		$charname = $row[1];
-		$temp = $row[2];
-		$accesslevel = $row[4];
-		if ($accesslevel == 4) {
-			$charname = "*Admin" . " " . $row[1];
-			$temp = "*Admin" . " " . $row[1];
-		} else if ($accesslevel == 3) {
-			$charname = "*Seer" . " " . $row[1];
-			$temp = "*Seer" . " " . $row[1];
-		} else if ($accesslevel == 2) {
-			$charname = "*GM" . " " . $row[1];
-			$temp = "*GM" . " " . $row[1];
-		} else if ($accesslevel == 1) {
-			$charname = "*Counselor" . " " . $row[1];
-			$temp = "*Counselor" . " " . $row[1];
+	while ($row = $result->fetch_assoc()) {
+		$id = $row["char_id"];
+		$charName = $row["char_name"];
+		$notoName = $row["char_nototitle"];
+		$accessLevel = $row["accesslevel"];
+		if ($accessLevel == 4) {
+			$charName = "*Admin" . " " . $charName;
+		} else if ($accessLevel == 3) {
+			$charName = "*Seer" . " " . $charName;
+		} else if ($accessLevel == 2) {
+			$charName = "*GM" . " " . $charName;
+		} else if ($accessLevel == 1) {
+			$charName = "*Counselor" . " " . $charName;
 		}
 
 		echo <<<EOF
           <tr>
             <td width="120">
-              <a href="player.php?id=$id">$charname</a>
+              <a href="player.php?id=$id">$charName</a>
             </td>
             <td>
-              $temp
+              $notoName
             </td>
           </tr>
 
@@ -248,9 +248,6 @@ echo <<<EOF
     </tr>
 
 EOF;
-
-mysql_free_result($result);
-mysql_close($link);
 
 if ($timestamp != "")
 	$dt = date("F j, Y, g:i a", strtotime($timestamp));

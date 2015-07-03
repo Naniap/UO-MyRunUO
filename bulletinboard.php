@@ -1,24 +1,23 @@
 <?php
 
-require("myrunuo.inc.php");
+include_once "SQL.php";
 
-$link = sql_connect();
+$sql = SQL::getConnection();
+$result = $sql->query("
+	SELECT update_time
+	FROM information_schema.tables
+	WHERE TABLE_SCHEMA = 'myrunuo' AND TABLE_NAME = 'myrunuo_statistics' AND update_time > (NOW() - INTERVAL 5 MINUTE);");
 
-$result = sql_query($link, "SELECT update_time
-FROM information_schema.tables
-WHERE TABLE_SCHEMA = 'myrunuo2' AND TABLE_NAME = 'myrunuo_statistics' AND update_time > (NOW() - INTERVAL 5 MINUTE);");
-if (!(list($tableuptime) = mysql_fetch_row($result)))
-	mysql_free_result($result);
-$currentDate = strtotime($tableuptime);
+$row = $result->fetch_assoc();
+$tableUptime = $row['update_time'];
+$currentDate = strtotime($tableUptime);
 $futureDate = $currentDate + (70 * 5);
 $formatDate = date("Y-m-d H:i:s", $futureDate);
 if (date("Y-m-d H:i:s") > $formatDate)
 	$uptime = "The server is currently down.";
-$result = sql_query($link, "SELECT time_datetime FROM myrunuo_timestamps WHERE time_type='Status'");
-if (!(list($timestamp) = mysql_fetch_row($result)))
-	$timestamp = "";
-mysql_free_result($result);
-
+$result = $sql->query("SELECT time_datetime FROM myrunuo_timestamps WHERE time_type='Status'");
+$row = $result->fetch_assoc();
+$timestamp = $row['time_datetime'];
 if ($timestamp != "")
 	$dt = date("F j, Y, g:i a", strtotime($timestamp));
 else
@@ -99,8 +98,12 @@ function showHide(div){
 		<td class="section-mm">
 EOF;
 $counter = 0;
-$result = sql_query($link, "SELECT poster, subject, time, postlines, thread, replythread FROM myrunuo_bulletinmessages"); //Retrieves information on Items
-while ((list($poster, $subject, $time, $postlines, $thread, $replythread) = mysql_fetch_row($result))) {
+$result = $sql->query("SELECT poster, subject, time, postlines FROM myrunuo_bulletinmessages");
+while ($row = $result->fetch_assoc()) {
+	$poster = $row['poster'];
+	$subject = $row['subject'];
+	$time = $row['time'];
+	$postLines = $row['postlines'];
 	if ($time != "")
 		$dt2 = date("F j, Y, g:i a", strtotime($time));
 	else
@@ -109,15 +112,11 @@ while ((list($poster, $subject, $time, $postlines, $thread, $replythread) = mysq
 
 <h2>
 <a href="#" onclick="showHide('eventbody-$counter');">$subject by $poster ($dt2)</a></h2>
-<div id="eventbody-$counter" style="display:none;">$postlines</div>
-
-
+<div id="eventbody-$counter" style="display:none;">$postLines</div>
  
 EOF;
 	$counter++;
 }
-mysql_free_result($result);
-mysql_close($link);
 
 echo <<<EOF
 <font face="Verdana" color="#000000" size="-1"><b>Last Updated:</b> $dt</font>
