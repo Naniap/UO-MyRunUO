@@ -3,31 +3,18 @@
 include_once "SQL.php";
 
 // Guild page / war page to display
-if (isset($_GET["gp"]))
-	$guildPage = $_GET["gp"];
-else
-	$guildPage = 0;
+check_get($guildPage, "gp");
+$guildPage = intval($guildPage);
+check_get($warPage, "wp");
+$warPage = intval($warPage);
 
-if (isset($_GET["wp"]))
-	$warPage = $_GET["wp"];
-else
-	$warPage = 0;
-
-if (isset($_GET["sortBy"]))
-	$sortBy = $_GET["sortBy"];
-else
-	$sortBy = "guild_name";
-
+check_get($sortBy, "sortby");
 if ($sortBy == "" || $sortBy == "guild_name")
 	$sort1 = "myrunuo_guilds.guild_name";
 else
 	$sort1 = $sortBy . " DESC";
 
-if (isset($_GET["sortBy"]))
-	$sortBy1 = $_GET["sortBy"];
-else
-	$sortBy1 = "guild_name";
-
+check_get($sortBy1, "sortby1");
 if ($sortBy1 == "" || $sortBy1 == "guild_name")
 	$sort2 = "myrunuo_guilds.guild_name";
 else

@@ -2,20 +2,15 @@
 
 include_once "SQL.php";
 
-if (!isset($_GET["tp"]))
-	$tp = 0;
-else
-	$tp = $_GET["tp"];
-
-if (!isset($_GET["tp"]))
+check_get($currentPage, "tp");
+$currentPage = intval($currentPage);
+check_get($flip, "flip");
+if ($flip)
 	$sw = "desc";
 else
 	$sw = "";
 
-if (!isset($_GET["sortby"]))
-	$sortBy = "name";
-else
-	$sortBy = $_GET["sortby"];
+check_get($sortBy, "sortby");
 $s = $sortBy;
 switch (strtolower($s)) {
 	case "kills":
@@ -60,7 +55,7 @@ $result = $sql->query("
                     FROM myrunuo_status
                     LEFT JOIN myrunuo_characters ON myrunuo_characters.char_id = myrunuo_status.char_id
                     WHERE char_name<>''
-                    ORDER BY $sortBy $sw LIMIT $tp, " . SQL::STATUSPERPAGE);
+                    ORDER BY $sortBy $sw LIMIT $currentPage, " . SQL::STATUSPERPAGE);
 echo <<<EOF
 <!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
 
@@ -143,19 +138,19 @@ echo <<<EOF
 
 EOF;
 
-if ($tp - SQL::STATUSPERPAGE >= 0) {
-	$num = $tp - SQL::STATUSPERPAGE;
+if ($currentPage - SQL::STATUSPERPAGE >= 0) {
+	$num = $currentPage - SQL::STATUSPERPAGE;
 	echo "        <a href=\"status.php?tp=$num&sortby=$s\"><img src=\"images/items/back.jpg\" border=\"0\"></a>\n";
 } else
 	echo "        &nbsp; &nbsp;";
 
-$page = intval($tp / SQL::STATUSPERPAGE) + 1;
+$page = intval($currentPage / SQL::STATUSPERPAGE) + 1;
 $pages = ceil($totalPlayers / SQL::STATUSPERPAGE);
 if ($pages > 1)
 	echo " <font size=\"-1\" face=\"Verdana\">Page [$page/$pages]</font> ";
 
-if ($tp + SQL::STATUSPERPAGE < $totalPlayers) {
-	$num = $tp + SQL::STATUSPERPAGE;
+if ($currentPage + SQL::STATUSPERPAGE < $totalPlayers) {
+	$num = $currentPage + SQL::STATUSPERPAGE;
 	echo "        <a href=\"status.php?tp=$num&sortby=$s\"><img src=\"images/items/next.jpg\" border=\"0\"></a>\n";
 }
 

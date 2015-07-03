@@ -1,21 +1,13 @@
 <?php
 
 include_once "SQL.php";
-$skillnames = array("Alchemy", "Anatomy", "Animal Lore", "Item Identification", "Arms Lore", "Parrying", "Begging", "Blacksmithing", "Bowcraft", "Peacemaking", "Camping", "Carpentry", "Cartography", "Cooking", "Detecting Hidden", "Enticement", "Evaluating Intelligence", "Healing", "Fishing", "Forensic Evaluation", "Herding", "Hiding", "Provocation", "Inscription", "Lockpicking", "Magery", "Magic Resistance", "Tactics", "Snooping", "Musicianship", "Poisoning", "Archery", "Spirit Speak", "Stealing", "Tailoring", "Taming", "Taste ID", "Tinkering", "Tracking", "Veterinary", "Swordsmanship", "Mace fighting", "Fencing", "Wrestling", "Lumberjacking", "Mining", "Meditation", "Stealth", "Remove Trap", "Necromancy", "Focus", "Chivalry", "Bushido", "Ninjitsu", "Spellweaving", "Mysticism", "Imbuing", "Throwing");
-if (!isset($_GET["id"]))
-	$id = 0;
-else
-	$id = $_GET["id"];
 
-if (!isset($_GET["nc"]))
-	$nc = 0;
-else
-	$nc = $_GET["nc"];
-
-if (!isset($_GET["g"]))
-	$guild = 0;
-else
-	$guild = $_GET["g"];
+check_get($id, "id");
+$id = intval($id);
+check_get($nc, "nc");
+$nc = intval($nc);
+check_get($guild, "g");
+$guild = htmlspecialchars($guild);
 
 $guild = htmlspecialchars($guild);
 

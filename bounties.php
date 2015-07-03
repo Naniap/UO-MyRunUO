@@ -2,21 +2,18 @@
 
 include_once "SQL.php";
 
-if (!isset($_GET["tp"]))
-	$tp = 0;
-else
-	$tp = $_GET["tp"];
+check_get($currentPage, "tp");
+$currentPage = intval($currentPage);
 
-$flip = $_GET["flip"];
+check_get($flip, "flip");
 if ($flip)
 	$sw = "desc";
 else
 	$sw = "";
-if (!isset($_GET["sortby"]))
-	$sortBy = "bounty";
-else
-	$sortBy = $_GET["sortby"];
-switch (strtolower($sortBy)) {
+
+check_get($sortBy, "sortby");
+$s = $sortBy;
+switch (strtolower($s)) {
 	case "name":
 		$sortBy = "char_name";
 		break;
@@ -62,7 +59,7 @@ $result = $sql->query("
 			SELECT char_name, char_counts, bounty, char_id, char_guild, myrunuo_guilds.guild_abbreviation
 			FROM myrunuo_characters
 			LEFT JOIN myrunuo_guilds ON myrunuo_characters.char_guild = myrunuo_guilds.guild_id
-			ORDER BY $sortBy $sw LIMIT $tp, " . SQL::STATUSPERPAGE);
+			ORDER BY $sortBy $sw LIMIT $currentPage, " . SQL::STATUSPERPAGE);
 echo <<<EOF
 <!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
 
@@ -136,19 +133,19 @@ echo <<<EOF
 
 EOF;
 
-if ($tp - SQL::STATUSPERPAGE >= 0) {
-	$num = $tp - SQL::STATUSPERPAGE;
+if ($currentPage - SQL::STATUSPERPAGE >= 0) {
+	$num = $currentPage - SQL::STATUSPERPAGE;
 	echo "        <a href=\"bounties.php?tp=$num&sortby=$s\"><img src=\"images/items/back.jpg\" border=\"0\"></a>\n";
 } else
 	//echo "        &nbsp; &nbsp;";
 
-	$page = intval($tp / SQL::STATUSPERPAGE) + 1;
+	$page = intval($currentPage / SQL::STATUSPERPAGE) + 1;
 $pages = ceil($totalPlayers / SQL::STATUSPERPAGE);
 if ($pages > 1)
 	echo " <font size=\"-1\" face=\"Verdana\">Page [$page/$pages]</font> ";
 
-if ($tp + SQL::STATUSPERPAGE < $totalPlayers) {
-	$num = $tp + SQL::STATUSPERPAGE;
+if ($currentPage + SQL::STATUSPERPAGE < $totalPlayers) {
+	$num = $currentPage + SQL::STATUSPERPAGE;
 	echo "        <a href=\"bounties.php?tp=$num&sortby=$s\"><img src=\"images/items/next.jpg\" border=\"0\"></a>\n";
 }
 

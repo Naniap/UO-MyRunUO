@@ -4,18 +4,12 @@ include_once "SQL.php";
 
 $sText = "Black";
 
-if (!isset($_GET["tp"]))
-	$tp = 0;
-else
-	$tp = $_GET["tp"];
+check_get($currentPage, "tp");
+$currentPage = intval($currentPage);
+check_get($findName, "fn");
 
-if (!isset($_GET["fn"]))
-	$fn = "";
-else
-	$fn = $_GET["fn"];
-
-if ($fn != "")
-	$where = "WHERE char_name LIKE '" . addslashes($fn) . "%'";
+if ($findName != "")
+	$where = "WHERE char_name LIKE '" . addslashes($findName) . "%'";
 else
 	$where = "";
 
@@ -176,24 +170,24 @@ echo <<<EOF
 
 EOF;
 
-if ($tp - SQL::PLAYERSPERPAGE >= 0) {
-	$num = $tp - SQL::PLAYERSPERPAGE;
-	echo "        <a href=\"players.php?tp=$num&fn=$fn\"><img src=\"images/items/back.jpg\" border=\"0\"></a>\n";
+if ($currentPage - SQL::PLAYERSPERPAGE >= 0) {
+	$num = $currentPage - SQL::PLAYERSPERPAGE;
+	echo "        <a href=\"players.php?tp=$num&fn=$findName\"><img src=\"images/items/back.jpg\" border=\"0\"></a>\n";
 } else
 	echo "        &nbsp; &nbsp;";
 
-$page = intval($tp / SQL::PLAYERSPERPAGE) + 1;
+$page = intval($currentPage / SQL::PLAYERSPERPAGE) + 1;
 $pages = ceil($totalPlayers / SQL::PLAYERSPERPAGE);
 if ($pages > 1)
 	echo " <font size=\"-1\" face=\"Verdana\">Page [$page/$pages]</font> ";
 
 // Players
-$result = $sql->query("SELECT char_id, char_name, char_nototitle, char_public, accesslevel FROM myrunuo_characters $where ORDER by char_name LIMIT $tp, " . SQL::PLAYERSPERPAGE);
+$result = $sql->query("SELECT char_id, char_name, char_nototitle, char_public, accesslevel FROM myrunuo_characters $where ORDER by char_name LIMIT $currentPage, " . SQL::PLAYERSPERPAGE);
 $num = $result->num_rows;
 
-if ($tp + SQL::PLAYERSPERPAGE < $totalPlayers) {
-	$num = $tp + SQL::PLAYERSPERPAGE;
-	echo "        <a href=\"players.php?tp=$num&fn=$fn\"><img src=\"images/items/next.jpg\" border=\"0\"></a>\n";
+if ($currentPage + SQL::PLAYERSPERPAGE < $totalPlayers) {
+	$num = $currentPage + SQL::PLAYERSPERPAGE;
+	echo "        <a href=\"players.php?tp=$num&fn=$findName\"><img src=\"images/items/next.jpg\" border=\"0\"></a>\n";
 }
 
 echo <<<EOF

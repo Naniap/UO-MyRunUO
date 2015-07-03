@@ -3,18 +3,13 @@ include_once "SQL.php";
 
 $msg = "";
 // Check for sumitted response
-if (!isset($_POST["submit"]))
-	$submit = "";
-else
-	$submit = $_POST["submit"];
+check_get($id, "id");
+$id = intval($id);
+check_get($submit, "submit");
 
-if (!isset($_POST["charname"]))
-	$player = "";
-else
-	$player = $_POST["charname"];
 if ($submit != "") {
 	// Get name user is searching for
-
+	check_get($player, "charname");
 	// If the name input is less than 3 characters then flag error
 	if (strlen($player) < 3)
 		$msg = "<font face=\"Arial\" size=\"2\" size=\"3\"></font>You must enter the name of the character you wish to search for. The name must be at least three letters long.</font><br>";
@@ -23,11 +18,7 @@ if ($submit != "") {
 		$front = "LIKE '";
 		$back = "'";
 
-		if (!isset($_POST["which"]))
-			$which = 0;
-		else
-			$which = $_POST["which"];
-
+		check_get($which, "which");
 		if ($which == "0") {
 			$front = "LIKE '%";
 			$back = "%'";

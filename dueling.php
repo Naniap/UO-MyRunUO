@@ -2,22 +2,17 @@
 
 include_once "SQL.php";
 
-if (isset($_GET["tp"]))
-	$currentPage = $_GET["tp"];
-else
-	$currentPage = 0;
-
-if (isset($_GET["flip"]))
+check_get($currentPage, "tp");
+$currentPage = intval($currentPage);
+check_get($flip, "flip");
+if ($flip)
 	$sw = "desc";
 else
 	$sw = "";
-$flip = !isset($_GET["sortby"]);
-if ($flip)
-	$sortBy = "rank";
-else
-	$sortBy = $_GET["sortby"];
 
-switch (strtolower($sortBy)) {
+check_get($sortBy, "sortby");
+$s = $sortBy;
+switch (strtolower($s)) {
 	case "name":
 		$sortBy = "char_name";
 		break;

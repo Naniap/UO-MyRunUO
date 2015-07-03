@@ -2,10 +2,8 @@
 
 include_once "SQL.php";
 
-if (!isset($_GET["id"]))
-	$id = 0;
-else
-	$id = $_GET["id"];
+check_get($id, "id");
+$id = intval($id);
 
 $sql = SQL::getConnection();
 
