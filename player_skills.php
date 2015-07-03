@@ -150,7 +150,7 @@ EOF;
 } else
 	echo "This character has chosen to not display $sex1 skills.";
 mysql_free_result($result);
-mysql_close($link);
+
 
 if ($timestamp != "")
 	$dt = date("F j, Y, g:i a", strtotime($timestamp));

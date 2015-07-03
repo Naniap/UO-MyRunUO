@@ -13,12 +13,12 @@ function checkPlural($number, $text)
 $sql = SQL::getConnection();
 
 $result = $sql->query("SELECT COUNT(*) FROM myrunuo_characters");
-$row = $result->fetch_row();
-$numChars = checkPlural($row[0], "character");
+$row = $result->fetch_assoc();
+$numChars = checkPlural($row["COUNT(*)"], "character");
 
 $result = $sql->query("SELECT COUNT(*) FROM myrunuo_guilds"); // adds number of guilds
-$row = $result->fetch_row();
-$numGuilds = checkPlural($row[0], "guild");
+$row = $result->fetch_assoc();
+$numGuilds = checkPlural($row["COUNT(*)"], "guild");
 
 $result = $sql->query("SELECT items, mobiles, uptime, accounts FROM myrunuo_statistics");
 $row = $result->fetch_assoc();
@@ -36,7 +36,7 @@ $futureDate = $currentDate + (70 * 5);
 $formatDate = date("Y-m-d H:i:s", $futureDate);
 if (date("Y-m-d H:i:s") > $formatDate)
 	$uptime = "The server is currently down.";
-$result = $sql->query("SELECT time_datetime FROM myrunuo_timestamps WHERE time_type='Status'");
+$result = $sql->query("SELECT time_datetime FROM myrunuo_timestamps WHERE time_type = 'Status'");
 if (!(list($timestamp) = $result->fetch_row()))
 	$timestamp = "";
 if ($timestamp != "")

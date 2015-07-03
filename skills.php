@@ -1,23 +1,30 @@
 <?php
 
-require("myrunuo.inc.php");
+include_once "SQL.php";
+$skillnames = array("Alchemy", "Anatomy", "Animal Lore", "Item Identification", "Arms Lore", "Parrying", "Begging", "Blacksmithing", "Bowcraft", "Peacemaking", "Camping", "Carpentry", "Cartography", "Cooking", "Detecting Hidden", "Enticement", "Evaluating Intelligence", "Healing", "Fishing", "Forensic Evaluation", "Herding", "Hiding", "Provocation", "Inscription", "Lockpicking", "Magery", "Magic Resistance", "Tactics", "Snooping", "Musicianship", "Poisoning", "Archery", "Spirit Speak", "Stealing", "Tailoring", "Taming", "Taste ID", "Tinkering", "Tracking", "Veterinary", "Swordsmanship", "Mace fighting", "Fencing", "Wrestling", "Lumberjacking", "Mining", "Meditation", "Stealth", "Remove Trap", "Necromancy", "Focus", "Chivalry", "Bushido", "Ninjitsu", "Spellweaving", "Mysticism", "Imbuing", "Throwing");
+if (!isset($_GET["id"]))
+	$id = 0;
+else
+	$id = $_GET["id"];
 
-check_get($id, "id");
-$id = intval($id);
+if (!isset($_GET["nc"]))
+	$nc = 0;
+else
+	$nc = $_GET["nc"];
 
-check_get($nc, "nc");
-$nc = intval($nc);
+if (!isset($_GET["g"]))
+	$guild = 0;
+else
+	$guild = $_GET["g"];
 
-check_get($guild, "g");
 $guild = htmlspecialchars($guild);
 
-$link = sql_connect();
+$sql = SQL::getConnection();
 
 // Skills timestamp
-$result = sql_query($link, "SELECT time_datetime FROM myrunuo_timestamps WHERE time_type='Skills'");
-if (!(list($timestamp) = mysql_fetch_row($result)))
-	$timestamp = "";
-mysql_free_result($result);
+$result = $sql->query("SELECT time_datetime FROM myrunuo_timestamps WHERE time_type = 'Guild'");
+$row = $result->fetch_assoc();
+$timestamp = $row["time_datetime"];
 
 echo <<<EOF
 <!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -43,7 +50,7 @@ echo <<<EOF
 <body> 
 <div align="center"> 
  
-<div id="banner"><img src="./images/banner.jpg" alt="" /></div>jpg" alt="" /></div>
+<div id="banner"><img src="./images/banner.jpg"></div>
 <div id="container"> 
 <div id="main"> 
 	<div id="sideNavi"> 
@@ -107,11 +114,12 @@ echo <<<EOF
 
 EOF;
 
-$result = sql_query($link, "SELECT skill_id,SUM(skill_value) AS totalskill_value
-                    FROM myrunuo_characters LEFT JOIN myrunuo_characters_skills ON myrunuo_characters.char_id=myrunuo_characters_skills.char_id
-                    WHERE char_guild=$id GROUP BY skill_id"); // AND char_public=1
+$result = $sql->query("
+					SELECT skill_id, SUM(skill_value) AS totalskill_value
+                    FROM myrunuo_characters LEFT JOIN myrunuo_characters_skills ON myrunuo_characters.char_id = myrunuo_characters_skills.char_id
+                    WHERE char_guild = $id GROUP BY skill_id");
 
-$sid = -1;
+$skillId = -1;
 for ($l = 0; $l < 2; $l++) {
 	for ($i = 0 + ($l * 26); $i <= 25 + ($l * 26); $i++) {
 		// Fix for swapped skill numbers
@@ -125,22 +133,22 @@ for ($l = 0; $l < 2; $l++) {
 		echo <<<EOF
             <tr> 
               <td>
-                <font face="Verdana" size="-1"><a href="http://guide.uo.com/skill_$s.html">$skillnames[$i]</a></font>
+                <font face="Verdana" size="-1"><a href="http://www.uoguide.com/$skillnames[$i]">$skillnames[$i]</a></font>
               </td>
               <td align="right">
                 <font face="Verdana" size="-1">&nbsp;&nbsp;
 
 EOF;
 
-		if ($sid < $i) {
-			if ($row = mysql_fetch_row($result)) {
-				$sid = intval($row[0]);
-				$val = sprintf("%0.1f", $row[1] / $nc / 10);
+		if ($skillId < $i) {
+			if ($row = $result->fetch_assoc()) {
+				$skillId = intval($row["skill_id"]);
+				$skillValue = sprintf("%0.1f", $row["totalskill_value"] / $nc / 10);
 			} else
-				$sid = 99;
+				$skillId = 99;
 		}
-		if ($i == $sid)
-			echo "$val";
+		if ($i == $skillId)
+			echo "$skillValue";
 		else
 			echo "0";
 
@@ -164,9 +172,6 @@ EOF;
 EOF;
 	}
 }
-
-mysql_free_result($result);
-mysql_close($link);
 
 if ($timestamp != "")
 	$dt = date("F j, Y, g:i a", strtotime($timestamp));

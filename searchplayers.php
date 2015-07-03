@@ -1,49 +1,53 @@
 <?php
-require("myrunuo.inc.php");
-//added
-check_get($id, "id");
-$id = intval($id);
-//end
+include_once "SQL.php";
 
 $msg = "";
 // Check for sumitted response
-check_get($submit, "submit");
+if (!isset($_POST["submit"]))
+	$submit = "";
+else
+	$submit = $_POST["submit"];
+
+if (!isset($_POST["charname"]))
+	$player = "";
+else
+	$player = $_POST["charname"];
 if ($submit != "") {
 	// Get name user is searching for
-	check_get($player, "charname");
 
 	// If the name input is less than 3 characters then flag error
 	if (strlen($player) < 3)
-		$msg = "<font face=\"Arial\" size=\"2\" size=\"3\">ERROR:</font><br>You must enter the name of the character you wish to search for. The name must be at least three letters long.</font><br>";
+		$msg = "<font face=\"Arial\" size=\"2\" size=\"3\"></font>You must enter the name of the character you wish to search for. The name must be at least three letters long.</font><br>";
 	else {
 		// Setup exact / beginning name search
 		$front = "LIKE '";
 		$back = "'";
 
-		check_get($which, "which");
+		if (!isset($_POST["which"]))
+			$which = 0;
+		else
+			$which = $_POST["which"];
+
 		if ($which == "0") {
 			$front = "LIKE '%";
 			$back = "%'";
 		}
-		$link = sql_connect();
-
+		$sql = SQL::getConnection();
 
 		$player = addslashes($player);
-		$result = sql_query($link, "SELECT char_id,char_name FROM myrunuo_characters WHERE char_name {$front}{$player}{$back} ORDER by char_name"); // char_public=1 AND
-		//$msg = "Your search returned the following characters:<br>\n";
-
-		if (mysql_numrows($result)) {
+		$result = $sql->query("SELECT char_id, char_name, guild_id AS char_guild_id, myrunuo_guilds.guild_abbreviation, myrunuo_guilds.guild_name, myrunuo_guilds.guild_id FROM myrunuo_characters INNER JOIN myrunuo_guilds WHERE char_name {$front}{$player}{$back} AND guild_id = myrunuo_guilds.guild_id ORDER by char_name");
+		if ($result->num_rows) {
 			// Cycle through all records and display hyper link with shard player
-			while ($row = mysql_fetch_row($result)) {
-				$id = intval($row[0]);
-				$name = htmlspecialchars($row[1]);
-				//$msg .= "<a href=\"player.php?id=$id\">$name</a><br>\n";
-				$msg .= "<tr><td class=\"entry\"><a href=\"player.php?id=$id\">$name</a></td>";
+			while ($row = $result->fetch_assoc()) {
+				$id = intval($row["char_id"]);
+				$name = htmlspecialchars($row["char_name"]);
+				$guildAbbreviation = $row["guild_abbreviation"];
+				$guildId = $row["guild_id"];
+				$guildName = $row["guild_name"];
+				$msg .= "<tr><td class=\"entry\"><a href=\"player.php?id=$id\">$name</a><td class='entry' align='right-center'><a href='guild.php?id=$guildId'>$guildName [$guildAbbreviation]</a></td></td>";
 			}
 		} else
-			$msg .= "<font face=\"Arial\" size=\"2\">No characters with that name found.</font>\n";
-		mysql_free_result($result);
-		mysql_close($link);
+			$msg = "<font face=\"Arial\" size=\"2\">No characters with that name found.</font>\n";
 	}
 }
 
@@ -136,14 +140,17 @@ echo <<<EOF
 	<tr> 
 		<td class="section-ml"></td> 
 		<td class="section-mm"><fieldset> 
-<legend>Search results for "$player"</legend> 
-<table cellpadding="3" cellspacing="1" width="100%"> 
-	<tr> 
-		<td class="header">Player</td> 
-		<!-- <td class="header" align="center">Guild</td> -->
-	</tr>	
+<legend>Search results for "$player"</legend>
+<table cellpadding="3" cellspacing="1" width="100%">
+	<tr>
+EOF;
+	if (strlen($player) > 3 && $msg != "<font face=\"Arial\" size=\"2\">No characters with that name found.</font>\n") {
+		echo '<td class="header">Player</td>';
+		echo '<td class="header" align="right-center">Guild</td>';
+	}
+ECHO <<<EOF
+	</tr>
   $msg
-  <!-- <td class="entry" align="center">$guild</td> -->
 </table>
    <!-- added end-->
 		</td> 

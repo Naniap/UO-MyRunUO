@@ -1,56 +1,64 @@
 <?php
 
-require("myrunuo.inc.php");
+include_once "SQL.php";
 
 // Guild page / war page to display
-check_get($gp, "gp");
-$gp = intval($gp);
-check_get($wp, "wp");
-$wp = intval($wp);
+if (isset($_GET["gp"]))
+	$guildPage = $_GET["gp"];
+else
+	$guildPage = 0;
 
-check_get($sortby, "sortby");
-if ($sortby == "" || $sortby == "guild_name")
+if (isset($_GET["wp"]))
+	$warPage = $_GET["wp"];
+else
+	$warPage = 0;
+
+if (isset($_GET["sortBy"]))
+	$sortBy = $_GET["sortBy"];
+else
+	$sortBy = "guild_name";
+
+if ($sortBy == "" || $sortBy == "guild_name")
 	$sort1 = "myrunuo_guilds.guild_name";
 else
-	$sort1 = $sortby . " DESC";
+	$sort1 = $sortBy . " DESC";
 
-check_get($sortby1, "sortby1");
-if ($sortby1 == "" || $sortby1 == "guild_name")
+if (isset($_GET["sortBy"]))
+	$sortBy1 = $_GET["sortBy"];
+else
+	$sortBy1 = "guild_name";
+
+if ($sortBy1 == "" || $sortBy1 == "guild_name")
 	$sort2 = "myrunuo_guilds.guild_name";
 else
-	$sort2 = $sortby1 . " DESC";
+	$sort2 = $sortBy1 . " DESC";
 
-$link = sql_connect();
+$sql = SQL::getConnection();
 
 // Total guilds count
-$result = sql_query($link, "SELECT COUNT(*) FROM myrunuo_guilds");
-list($totalguilds) = mysql_fetch_row($result);
-$totalguilds = intval($totalguilds);
-mysql_free_result($result);
+$result = $sql->query("SELECT COUNT(*) FROM myrunuo_guilds");
+$row = $result->fetch_assoc();
+$totalGuilds = $row["COUNT(*)"];
 
 // Total guilds at war
-$result = sql_query($link, "SELECT DISTINCT count(*) FROM myrunuo_guilds_wars GROUP BY guild_1");
-list($totalwar) = mysql_fetch_row($result);
-$totalwar = intval($totalwar);
-mysql_free_result($result);
+$result = $sql->query("SELECT DISTINCT count(*) FROM myrunuo_guilds_wars GROUP BY guild_1");
+$row = $result->fetch_assoc();
+$totalWars  = $row["COUNT(*)"];
 
 // Chaos guilds total count
-$result = sql_query($link, "SELECT COUNT(*) FROM myrunuo_guilds WHERE guild_type='Chaos'");
-list($chaosguilds) = mysql_fetch_row($result);
-$chaosguilds = intval($chaosguilds);
-mysql_free_result($result);
+$result = $sql->query("SELECT COUNT(*) FROM myrunuo_guilds WHERE guild_type = 'Chaos'");
+$row = $result->fetch_assoc();
+$chaosGuilds  = $row["COUNT(*)"];
 
 // Order guilds total count
-$result = sql_query($link, "SELECT COUNT(*) FROM myrunuo_guilds WHERE guild_type='Order'");
-list($orderguilds) = mysql_fetch_row($result);
-$orderguilds = intval($orderguilds);
-mysql_free_result($result);
+$result = $sql->query("SELECT COUNT(*) FROM myrunuo_guilds WHERE guild_type = 'Order'");
+$row = $result->fetch_assoc();
+$orderGuilds  = $row["COUNT(*)"];
 
 // Guild timestamp
-$result = sql_query($link, "SELECT time_datetime FROM myrunuo_timestamps WHERE time_type='Guild'");
-if (!(list($timestamp) = mysql_fetch_row($result)))
-	$timestamp = "";
-mysql_free_result($result);
+$result = $sql->query("SELECT time_datetime FROM myrunuo_timestamps WHERE time_type = 'Guild'");
+$row = $result->fetch_assoc();
+$timestamp = $row["time_datetime"];
 
 echo <<<EOF
 <!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -78,7 +86,7 @@ echo <<<EOF
 			<li class="navigation"><a href="players.php">Players</a></li> 
 			<li class="navigation"><a href="guilds.php">Guilds</a></li> 
 			<li class="navigation"><a href="dueling.php">Dueling</a></li>
-			<li class="navigation"><a href="bounties.php?sortby=Bounty&flip=1">Bounties</a></li>
+			<li class="navigation"><a href="bounties.php?sortBy=Bounty&flip=1">Bounties</a></li>
 			<li class="navigation"><a href="bulletinboard.php">Bulletin Posts</a></li>
 		</ul> 
 		</ul> 
@@ -127,7 +135,7 @@ echo <<<EOF
     <tr>
       <td align="left" bgcolor="#32605e">
         <font face="Verdana" color="#ffffff" size="-1">
-        &nbsp;&nbsp;<b>Total Guilds:</b> $totalguilds<b>&nbsp;&nbsp;Total Chaos Guilds:</b> $chaosguilds &nbsp;&nbsp;<b>Total Order Guilds:</b> $orderguilds
+        &nbsp;&nbsp;<b>Total Guilds:</b> $totalGuilds<b>&nbsp;&nbsp;Total Chaos Guilds:</b> $chaosGuilds &nbsp;&nbsp;<b>Total Order Guilds:</b> $orderGuilds
         </font>
       </td>
     </tr>
@@ -140,20 +148,20 @@ echo <<<EOF
 
 EOF;
 
-if ($gp - $guilds_perpage >= 0) {
-	$num = $gp - $guilds_perpage;
-	echo "        <a href=\"guilds.php?gp=$num&wp=$wp&sortby=$sortby&sortby1=$sortby1\"><img src=\"images/items/back.jpg\" border=\"0\"></a>\n";
+if ($guildPage - SQL::GUILDSPERPAGE >= 0) {
+	$num = $guildPage - SQL::GUILDSPERPAGE;
+	echo "        <a href=\"guilds.php?gp=$num&wp=$warPage&sortBy=$sortBy&sortBy1=$sortBy1\"><img src=\"images/items/back.jpg\" border=\"0\"></a>\n";
 } else
 	echo "        &nbsp; &nbsp;";
 
-$page = intval($gp / $guilds_perpage) + 1;
-$pages = ceil($totalguilds / $guilds_perpage);
+$page = intval($guildPage / SQL::GUILDSPERPAGE) + 1;
+$pages = ceil($totalGuilds / SQL::GUILDSPERPAGE);
 if ($pages > 1)
 	echo " <font size=\"-1\" face=\"Verdana\">Page [$page/$pages]</font> ";
 
-if ($gp + $guilds_perpage < $totalguilds) {
-	$num = $gp + $guilds_perpage;
-	echo "        <a href=\"guilds.php?gp=$num&wp=$wp&sortby=$sortby&sortby1=$sortby1\"><img src=\"images/items/next.jpg\" border=\"0\"></a>\n";
+if ($guildPage + SQL::GUILDSPERPAGE < $totalGuilds) {
+	$num = $guildPage + SQL::GUILDSPERPAGE;
+	echo "        <a href=\"guilds.php?gp=$num&wp=$warPage&sortBy=$sortBy&sortBy1=$sortBy1\"><img src=\"images/items/next.jpg\" border=\"0\"></a>\n";
 }
 
 echo <<<EOF
@@ -168,17 +176,17 @@ echo <<<EOF
               <td width="10">&nbsp;</td>
               <td>
                 <font face="Verdana" size="2">
-                <a href="guilds.php?sortby=guild_name&sortby1=$sortby1" style="color: black"><strong>Guild Name</strong></a>
+                <a href="guilds.php?sortBy=guild_name&sortBy1=$sortBy1" style="color: black"><strong>Guild Name</strong></a>
                 </font>
               </td>
               <td align="right" width="50">
                 <font face="Verdana" size="2">
-                <a href="guilds.php?sortby=countofchar_guild&sortby1=$sortby1" style="color: black"><strong>Members</strong></a>
+                <a href="guilds.php?sortBy=countofchar_guild&sortBy1=$sortBy1" style="color: black"><strong>Members</strong></a>
                 </font>
               </td>
               <td align="right" width="50">
                 <font face="Verdana" size="2">
-                <a href="guilds.php?sortby=countofchar_counts&sortby1=$sortby1" style="color: black"><strong>Kills</strong></a>
+                <a href="guilds.php?sortBy=countofchar_counts&sortBy1=$sortBy1" style="color: black"><strong>Kills</strong></a>
                 </font>
               </td>
             </tr>
@@ -186,22 +194,24 @@ echo <<<EOF
 EOF;
 
 // Guilds / members
-$result = sql_query($link, "SELECT guild_id,guild_name,COUNT(char_guild) AS countofchar_guild,SUM(char_counts) AS countofchar_counts
-                    FROM myrunuo_guilds INNER JOIN myrunuo_characters ON guild_id=char_guild
-                    GROUP BY guild_name ORDER by $sort1 LIMIT $gp,$guilds_perpage");
-if (mysql_numrows($result)) {
-	$num = $gp * $guilds_perpage + 1;
-	while ($row = mysql_fetch_row($result)) {
-		$guildid = intval($row[0]);
-		$name = $row[1];
-		$members = intval($row[2]);
-		$kills = intval($row[3]);
+$result = $sql->query("
+					SELECT guild_id, guild_name, COUNT(char_guild) AS countofchar_guild, SUM(char_counts) AS countofchar_counts
+                    FROM myrunuo_guilds INNER JOIN myrunuo_characters ON guild_id = char_guild
+                    GROUP BY guild_name ORDER by $sort1 LIMIT $guildPage, " . SQL::GUILDSPERPAGE);
+
+if ($result->num_rows >= 1) {
+	$num = $guildPage * SQL::GUILDSPERPAGE + 1;
+	while ($row = $result->fetch_assoc()) {
+		$guildId = intval($row["guild_id"]);
+		$guildName = $row["guild_name"];
+		$members = intval($row["countofchar_guild"]);
+		$kills = intval($row["countofchar_counts"]);
 		echo <<<EOF
             <tr> 
               <td align="right" width="10">
                 <font face="Verdana" size="-1">$num</font></td>
               <td align="left" width="470">
-                <font face="Verdana" size="-1"><a href="guild.php?id=$guildid">$name</a></font>
+                <font face="Verdana" size="-1"><a href="guild.php?id=$guildId">$guildName</a></font>
               </td>
               <td align="right" width="50">
                 <font face="Verdana" size="-1">$members</font>
@@ -239,20 +249,20 @@ echo <<<EOF
 
 EOF;
 
-if ($wp - $guilds_perpage > 0) {
-	$num = $wp - $guilds_perpage;
-	echo "                <a href=\"guilds.php?wp=$num&gp=$gp&sortby=$sortby&sortby1=$sortby1\"><img src=\"images/items/back.jpg\" border=\"0\"></a>\n";
+if ($warPage - SQL::GUILDSPERPAGE > 0) {
+	$num = $warPage - SQL::GUILDSPERPAGE;
+	echo "                <a href=\"guilds.php?wp=$num&gp=$guildPage&sortBy=$sortBy&sortBy1=$sortBy1\"><img src=\"images/items/back.jpg\" border=\"0\"></a>\n";
 } else
 	echo "                &nbsp;&nbsp;";
 
-$page = intval($wp / $guilds_perpage) + 1;
-$pages = ceil($totalwar / $guilds_perpage);
+$page = intval($warPage / SQL::GUILDSPERPAGE) + 1;
+$pages = ceil($totalWars / SQL::GUILDSPERPAGE);
 if ($pages > 1)
 	echo " <font size=\"-1\" face=\"Verdana\">Page [$page/$pages]</font> ";
 
-if ($wp + $guilds_perpage < $totalwar) {
-	$num = $wp + $guilds_perpage;
-	echo "                <a href=\"guilds.php?wp=$num&gp=$gp&sortby=$sortby&sortby1=$sortby1\"><img src=\"images/items/next.jpg\" border=\"0\"></a>\n";
+if ($warPage + SQL::GUILDSPERPAGE < $totalWars) {
+	$num = $warPage + SQL::GUILDSPERPAGE;
+	echo "                <a href=\"guilds.php?wp=$num&gp=$guildPage&sortBy=$sortBy&sortBy1=$sortBy1\"><img src=\"images/items/next.jpg\" border=\"0\"></a>\n";
 }
 
 echo <<<EOF
@@ -267,27 +277,27 @@ echo <<<EOF
               <td width="10">&nbsp;</td>
               <td width="520">
                 <font face="Verdana" size="-1">
-                <a href="guilds.php?sortby1=guild_name&sortby=$sortby" style="color: black"><strong>Guild Name</strong></a></font>
+                <a href="guilds.php?sortBy1=guild_name&sortBy=$sortBy" style="color: black"><strong>Guild Name</strong></a></font>
               </td>
               <td align="right" width="50">
-                <font face="Verdana" size="-1"><a href="guilds.php?sortby1=countofguild_1&sortby=$sortby" style="color: black"><strong>Enemies</strong></a></font>
+                <font face="Verdana" size="-1"><a href="guilds.php?sortBy1=countofguild_1&sortBy=$sortBy" style="color: black"><strong>Enemies</strong></a></font>
               </td>
             </tr>
 
 EOF;
 
 // War guilds / enemies
-$result = sql_query($link, "SELECT guild_id,guild_name,COUNT(guild_1) AS countofguild_1
-                    FROM myrunuo_guilds INNER JOIN myrunuo_guilds_wars ON guild_id=guild_1 OR guild_id=guild_2
-                    GROUP BY guild_id,guild_name ORDER by $sort2 LIMIT $wp,$guilds_perpage");
-$num = mysql_numrows($result);
+$result = $sql->query("SELECT guild_id, guild_name, COUNT(guild_1) AS countofguild_1
+                    FROM myrunuo_guilds INNER JOIN myrunuo_guilds_wars ON guild_id = guild_1 OR guild_id = guild_2
+                    GROUP BY guild_id,guild_name ORDER by $sort2 LIMIT $warPage, " . SQL::GUILDSPERPAGE);
+$num = $result->num_rows;
 
 if ($num) {
-	$num = $wp * $guilds_perpage + 1;
-	while ($row = mysql_fetch_row($result)) {
-		$guildid = intval($row[0]);
-		$name = $row[1];
-		$enemies = intval($row[2]);
+	$num = $warPage * SQL::GUILDSPERPAGE + 1;
+	while ($row = $result->fetch_assoc()) {
+		$guildId = intval($row["guild_id"]);
+		$guildName = $row["guild_name"];
+		$enemies = intval($row["countofguild_1"]);
 
 		echo <<<EOF
             <tr> 
@@ -295,7 +305,7 @@ if ($num) {
                 <font face="Verdana" size="-1">$num</font>
               </td>
               <td align="left" width="520">
-                <font face="Verdana" size="-1"><a href="guild.php?id=$guildid">$name</a></font>
+                <font face="Verdana" size="-1"><a href="guild.php?id=$guildId">$guildName</a></font>
               </td>
               <td align="right" width="50">
                 <font face="Verdana" size="-1">$enemies</font>
@@ -313,9 +323,6 @@ EOF;
 
 EOF;
 }
-
-mysql_free_result($result);
-mysql_close($link);
 
 if ($timestamp != "")
 	$dt = date("F j, Y, g:i a", strtotime($timestamp));

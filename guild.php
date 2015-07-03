@@ -1,16 +1,17 @@
 <?php
 
-require("myrunuo.inc.php");
+include_once "SQL.php";
 
-check_get($id, "id");
-$id = intval($id);
+if (!isset($_GET["id"]))
+	$id = 0;
+else
+	$id = $_GET["id"];
 
-$link = sql_connect();
+$sql = SQL::getConnection();
 
 // Get guild data
-$result = sql_query($link, "SELECT * FROM myrunuo_guilds WHERE guild_id=$id LIMIT 1");
-if ($row = mysql_fetch_array($result)) {
-	mysql_free_result($result);
+$result = $sql->query("SELECT * FROM myrunuo_guilds WHERE guild_id = $id LIMIT 1");
+if ($row = $result->fetch_assoc()) {
 	while (list($key, $val) = each($row))
 		${$key} = $val;
 
@@ -33,20 +34,20 @@ if ($row = mysql_fetch_array($result)) {
 		$guild_charter = "No guild charter has been specified.";
 } else {
 	echo "Invalid guild ID.<br>\n";
-	mysql_close($link);
+
 	die();
 }
 
-$result = sql_query($link, "SELECT char_name FROM myrunuo_characters WHERE char_id=$guild_master LIMIT 1");
-if (!(list($master_name) = mysql_fetch_row($result)))
-	$master_name = "None";
-mysql_free_result($result);
+$result = $sql->query("SELECT char_name FROM myrunuo_characters WHERE char_id = $guild_master LIMIT 1");
+if($row = $result->fetch_assoc())
+	$guildMaster = $row['char_name'];
+else
+	$guildMaster = "None";
 
 // Guild timestamp
-$result = sql_query($link, "SELECT time_datetime FROM myrunuo_timestamps WHERE time_type='Guilds'");
-if (!(list($timestamp) = mysql_fetch_row($result)))
-	$timestamp = "";
-mysql_free_result($result);
+$result = $sql->query("SELECT time_datetime FROM myrunuo_timestamps WHERE time_type = 'Guild'");
+$row = $result->fetch_assoc();
+$timestamp = $row["time_datetime"];
 
 echo <<<EOF
 <!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -162,7 +163,7 @@ echo <<<EOF
     <td>
       <strong><font face="Verdana" size="2">Master/Mistress:</font></strong></td>
     <td>
-      <font face="Verdana" size="-1"><a href="player.php?id=$guild_master">$master_name</a></font>
+      <font face="Verdana" size="-1"><a href="player.php?id=$guild_master">$guildMaster</a></font>
     </td>
   </tr>
   <tr> 
@@ -219,26 +220,26 @@ echo <<<EOF
 EOF;
 
 // Guild Members
-$result = sql_query($link, "SELECT char_id,char_name,char_nototitle,char_guildtitle,char_public FROM myrunuo_characters WHERE char_guild=$id");
-if (mysql_numrows($result)) {
-	while ($row = mysql_fetch_row($result)) {
-		$charid = intval($row[0]);
-		$charname = $row[1];
-		$chartitle = $row[2];
-		$charguildtitle = $row[3];
-		$charpublic = intval($row[4]);
+$result = $sql->query("SELECT char_id, char_name, char_nototitle, char_guildtitle, char_public FROM myrunuo_characters WHERE char_guild = $id");
+if ($result->num_rows) {
+	while ($row = $result->fetch_assoc()) {
+		$charId = intval($row["char_id"]);
+		$charName = $row["char_name"];
+		$charTitle = $row["char_nototitle"];
+		$charGuildTitle = $row["char_guildtitle"];
+		$charPublic = intval($row["char_public"]);
 
-		if (strcasecmp($charguildtitle, "NULL"))
-			$charguildtitle = " [$charguildtitle]";
+		if (strcasecmp($charGuildTitle, "NULL"))
+			$charGuildTitle = " [$charGuildTitle]";
 		else
-			$charguildtitle = "";
+			$charGuildTitle = "";
 
-		$cma = strpos($chartitle, ",");
-		$namedisplay = substr($chartitle, 0, $cma);
-		$chartitle = substr($chartitle, $cma);
+		$cma = strpos($charTitle, ",");
+		$namedisplay = substr($charTitle, 0, $cma);
+		$charTitle = substr($charTitle, $cma);
 
 		echo <<< EOF
-<a href="player.php?id=$charid">$chartitle $charguildtitle<br></a>
+<a href="player.php?id=$charId">$charTitle $charGuildTitle<br></a>
 EOF;
 	}
 }
@@ -250,31 +251,29 @@ echo <<<EOF
 EOF;
 
 // Guild Wars 1
-$result = sql_query($link, "SELECT guild_name,guild_2 FROM myrunuo_guilds_wars INNER JOIN myrunuo_guilds ON guild_2=guild_id WHERE guild_1=$id");
-$num1 = mysql_numrows($result);
+$result = $sql->query("SELECT guild_name, guild_2 FROM myrunuo_guilds_wars INNER JOIN myrunuo_guilds ON guild_2 = guild_id WHERE guild_1 = $id");
+$num1 = $result->num_rows;
 if ($num1) {
-	while ($row = mysql_fetch_row($result)) {
-		$war_name = $row[0];
-		$war_id = intval($row[1]);
-		echo "      <font face=\"Verdana\" size=\"-1\"><a href=\"guild.php?id=$war_id\">$war_name</a></font><br>\n";
+	while ($row = $result->fetch_assoc()) {
+		$warName = $row["guild_name"];
+		$warId = intval($row["guild_2"]);
+		echo "      <font face=\"Verdana\" size=\"-1\"><a href=\"guild.php?id=$warId\">$warName</a></font><br>\n";
 	}
 }
 
 // Guild Wars 2
-$result = sql_query($link, "SELECT guild_name,guild_1 FROM myrunuo_guilds_wars INNER JOIN myrunuo_guilds ON guild_1=guild_id WHERE guild_2=$id");
-$num2 = mysql_numrows($result);
+$result = $sql->query("SELECT guild_name, guild_1 FROM myrunuo_guilds_wars INNER JOIN myrunuo_guilds ON guild_1 = guild_id WHERE guild_2 = $id");
+$num2 = $result->num_rows;
 if ($num2) {
-	while ($row = mysql_fetch_row($result)) {
-		$war_name = $row[0];
-		$war_id = intval($row[1]);
-		echo "      <font face=\"Verdana\" size=\"-1\"><a href=\"guild.php?id=$war_id\">$war_name</a></font><br>\n";
+	while ($row = $result->fetch_assoc()) {
+		$warName = $row["guild_name"];
+		$warId = intval($row["guild_1"]);
+		echo "      <font face=\"Verdana\" size=\"-1\"><a href=\"guild.php?id=$warId\">$warName</a></font><br>\n";
 	}
 }
 
 if (!$num1 && !$num2)
 	echo "      <font face=\"Verdana\" size=\"-1\">None</font>\n";
-
-mysql_close($link);
 
 if ($timestamp != "")
 	$dt = date("F j, Y, g:i a", strtotime($timestamp));

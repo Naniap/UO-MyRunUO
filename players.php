@@ -27,16 +27,16 @@ if ($where != "")
 else
 	$wherep = "WHERE char_public=1";
 $result = $sql->query("SELECT COUNT(*) FROM myrunuo_characters $wherep");
-$row = $result->fetch_row();
-$totalPublic = $row[0];
+$row = $result->fetch_assoc();
+$totalPublic = $row["COUNT(*)"];
 
 // Total players
 $result = $sql->query("SELECT COUNT(*) FROM myrunuo_characters $where");
-$row = $result->fetch_row();
-$totalPlayers = $row[0];
+$row = $result->fetch_assoc();
+$totalPlayers = $row["COUNT(*)"];
 
 // Player timestamp
-$result = $sql->query("SELECT time_datetime FROM myrunuo_timestamps WHERE time_type='Char'");
+$result = $sql->query("SELECT time_datetime FROM myrunuo_timestamps WHERE time_type = 'Char'");
 $row = $result->fetch_assoc();
 $timestamp = $row["time_datetime"];
 

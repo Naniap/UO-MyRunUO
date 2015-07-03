@@ -9,15 +9,15 @@ $result = $sql->query("
 	WHERE TABLE_SCHEMA = 'myrunuo' AND TABLE_NAME = 'myrunuo_statistics' AND update_time > (NOW() - INTERVAL 5 MINUTE);");
 
 $row = $result->fetch_assoc();
-$tableUptime = $row['update_time'];
+$tableUptime = $row["update_time"];
 $currentDate = strtotime($tableUptime);
 $futureDate = $currentDate + (70 * 5);
 $formatDate = date("Y-m-d H:i:s", $futureDate);
 if (date("Y-m-d H:i:s") > $formatDate)
 	$uptime = "The server is currently down.";
-$result = $sql->query("SELECT time_datetime FROM myrunuo_timestamps WHERE time_type='Status'");
+$result = $sql->query("SELECT time_datetime FROM myrunuo_timestamps WHERE time_type = 'Status'");
 $row = $result->fetch_assoc();
-$timestamp = $row['time_datetime'];
+$timestamp = $row["time_datetime"];
 if ($timestamp != "")
 	$dt = date("F j, Y, g:i a", strtotime($timestamp));
 else
@@ -100,10 +100,10 @@ EOF;
 $counter = 0;
 $result = $sql->query("SELECT poster, subject, time, postlines FROM myrunuo_bulletinmessages");
 while ($row = $result->fetch_assoc()) {
-	$poster = $row['poster'];
-	$subject = $row['subject'];
-	$time = $row['time'];
-	$postLines = $row['postlines'];
+	$poster = $row["poster"];
+	$subject = $row["subject"];
+	$time = $row["time"];
+	$postLines = $row["postlines"];
 	if ($time != "")
 		$dt2 = date("F j, Y, g:i a", strtotime($time));
 	else

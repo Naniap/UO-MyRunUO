@@ -2,12 +2,12 @@
 
 include_once "SQL.php";
 
-if (!isset($_GET['tp']))
+if (!isset($_GET["tp"]))
 	$tp = 0;
 else
-	$tp = $_GET['tp'];
+	$tp = $_GET["tp"];
 
-if (!isset($_GET['tp']))
+if (!isset($_GET["tp"]))
 	$sw = "desc";
 else
 	$sw = "";
@@ -34,7 +34,7 @@ switch (strtolower($s)) {
 $sql = SQL::getConnection();
 
 // Status timestamp
-$result = $sql->query("SELECT time_datetime FROM myrunuo_timestamps WHERE time_type='Status'");
+$result = $sql->query("SELECT time_datetime FROM myrunuo_timestamps WHERE time_type = 'Status'");
 $row = $result->fetch_assoc();
 $timestamp = $row["time_datetime"];
 
@@ -51,14 +51,14 @@ if (!$flip) {
 }
 // Get total online player count
 $result = $sql->query("SELECT COUNT(*) FROM myrunuo_status");
-$row = $result->fetch_row();
-$totalPlayers = $row[0];
+$row = $result->fetch_assoc();
+$totalPlayers = $row["COUNT(*)"];
 
 // Get status and total online players (non-staff)
 $result = $sql->query("
 					SELECT myrunuo_status.char_id, char_karma, char_fame, char_name, char_nototitle, char_counts
                     FROM myrunuo_status
-                    LEFT JOIN myrunuo_characters ON myrunuo_characters.char_id=myrunuo_status.char_id
+                    LEFT JOIN myrunuo_characters ON myrunuo_characters.char_id = myrunuo_status.char_id
                     WHERE char_name<>''
                     ORDER BY $sortBy $sw LIMIT $tp, " . SQL::STATUSPERPAGE);
 echo <<<EOF
@@ -168,11 +168,11 @@ EOF;
 $num = 0;
 if ($totalPlayers) {
 	while ($row = mysql_fetch_row($result)) {
-		$id = $row['char_id'];
-		$karma = $row['char_karma'];
-		$fame = $row['char_fame'];
-		$charName = $row['char_name'];
-		$title = $row['char_nototitle'];
+		$id = $row["char_id"];
+		$karma = $row["char_karma"];
+		$fame = $row["char_fame"];
+		$charName = $row["char_name"];
+		$title = $row["char_nototitle"];
 		$kills = $row["char_counts"];
 
 		if ($charName != "") {

@@ -28,11 +28,14 @@
       DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
       OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
+include_once "SQL.php";
+$mulpath = "uofiles/";
 
-require("myrunuo.inc.php");
+if (!isset($_GET["id"]))
+	$id = 0;
+else
+	$id = $_GET["id"];
 
-check_get($id, "id");
-$id = intval($id);
 if (!$id)
 	die();
 
@@ -54,50 +57,51 @@ if (!empty($validhosts)) {
 		die();
 }
 
-$link = sql_connect();
-$result = sql_query($link, "SELECT char_nototitle,char_female,char_bodyhue FROM myrunuo_characters WHERE char_id=$id");
-if (!(list($nametitle, $charfemale, $charbodyhue) = mysql_fetch_row($result)))
-	die();
-mysql_free_result($result);
+$sql = SQL::getConnection();
+$result = $sql->query("SELECT char_nototitle, char_female, char_bodyhue FROM myrunuo_characters WHERE char_id = $id");
+$row = $result->fetch_assoc();
+$nameTitle = $row["char_nototitle"];
+$charFemale = $row["char_female"];
+$charBodyHue = $row["char_bodyhue"];
 
 // Insert body into variables
-if ($charfemale) {
+if ($charFemale) {
 	$indexA = "13";
 	$femaleA = "1";
 } else {
 	$indexA = "12";
 	$femaleA = "0";
 }
-$hueA = $charbodyhue;
-$isgumpA = "1";
+$hueA = $charBodyHue;
+$isGumpA = "1";
 
-$result = sql_query($link, "SELECT item_id,item_hue,layer_id FROM myrunuo_characters_layers WHERE char_id=$id ORDER BY layer_id");
+$result = $sql->query("SELECT item_id, item_hue, layer_id FROM myrunuo_characters_layers WHERE char_id = $id ORDER BY layer_id");
 $items = array(array());
-$num = $dosort = 0;
-while ($row = mysql_fetch_row($result)) {
-	$items[0][$num] = $row[0];
-	$items[1][$num] = $row[1];
-	if ($row[2] == 13) {
-		$items[2][$num++] = 3.5; // Fix for tunic
-		$dosort = 1;
+$num = $doSort = 0;
+while ($row = $result->fetch_assoc()) {
+	$items["item_id"][$num] = $row["item_id"];
+	$items["item_hue"][$num] = $row["item_hue"];
+	if ($row["layer_id"] == 13) {
+		$items["layer_id"][$num++] = 3.5; // Fix for tunic
+		$doSort = 1;
 	} else
-		$items[2][$num++] = $row[2];
+		$items["layer_id"][$num++] = $row["layer_id"];
 }
-mysql_free_result($result);
-mysql_close($link);
 
-if ($dosort)
-	array_multisort($items[2], SORT_ASC, SORT_NUMERIC, $items[0], SORT_ASC, SORT_NUMERIC, $items[1], SORT_ASC, SORT_NUMERIC);
+
+
+if ($doSort)
+	array_multisort($items["layer_id"], SORT_ASC, SORT_NUMERIC, $items["item_id"], SORT_ASC, SORT_NUMERIC, $items["item_hue"], SORT_ASC, SORT_NUMERIC);
 
 for ($i = 0; $i < $num; $i++) {
 	// Insert items into variables
-	$indexA .= "," . $items[0][$i];
-	$hueA .= "," . $items[1][$i];
-	if ($charfemale)
+	$indexA .= "," . $items["item_id"][$i];
+	$hueA .= "," . $items["item_hue"][$i];
+	if ($charFemale)
 		$femaleA .= ",1";
 	else
 		$femaleA .= ",0";
-	$isgumpA .= ",0";
+	$isGumpA .= ",0";
 }
 
 // Paperdoll Graphic Area
@@ -108,12 +112,12 @@ if (strpos($indexA, ",")) {
 	$indexA = explode(",", $indexA);
 	$femaleA = explode(",", $femaleA);
 	$hueA = explode(",", $hueA);
-	$isgumpA = explode(",", $isgumpA);
+	$isGumpA = explode(",", $isGumpA);
 } else {
 	$indexA = array($indexA);
 	$femaleA = array($femaleA);
 	$hueA = array($hueA);
-	$isgumpA = array($isgumpA);
+	$isGumpA = array($isGumpA);
 }
 
 $hues = FALSE;
@@ -156,7 +160,7 @@ for ($i = 0; $i < sizeof($indexA); $i++) {
 	$index = intval($indexA[$i]);
 	$female = intval($femaleA[$i]);
 	$hue = intval($hueA[$i]);
-	$isgump = intval($isgumpA[$i]);
+	$isgump = intval($isGumpA[$i]);
 
 	if ($female >= 1)
 		$female = 1;
@@ -208,12 +212,12 @@ for ($i = 0; $i < sizeof($indexA); $i++) {
 }
 
 // Separate name and skill title
-$nametitle = striphtmlchars($nametitle);
-if (($i = strpos($nametitle, ",")) !== FALSE) {
-	$name = substr($nametitle, 0, $i);
-	$title = substr($nametitle, $i + 2);
+$nameTitle = striphtmlchars($nameTitle);
+if (($i = strpos($nameTitle, ",")) !== FALSE) {
+	$name = substr($nameTitle, 0, $i);
+	$title = substr($nameTitle, $i + 2);
 } else {
-	$name = $nametitle;
+	$name = $nameTitle;
 	$title = "";
 }
 

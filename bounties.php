@@ -54,8 +54,8 @@ if (!$flip) {
 }
 // Get total online player count
 $result = $sql->query("SELECT COUNT(*) FROM myrunuo_characters");
-$row = $result->fetch_row();
-$totalPlayers = $row[0];
+$row = $result->fetch_assoc();
+$totalPlayers = $row["COUNT(*)"];
 
 // Get status and total online players (non-staff)
 $result = $sql->query("

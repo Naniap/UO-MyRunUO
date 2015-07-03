@@ -2,19 +2,21 @@
 
 include_once "SQL.php";
 
-check_get($tp, "tp");
-$tp = intval($tp);
+if (isset($_GET["tp"]))
+	$currentPage = $_GET["tp"];
+else
+	$currentPage = 0;
 
-check_get($flip, "flip");
-if ($flip)
+if (isset($_GET["flip"]))
 	$sw = "desc";
 else
 	$sw = "";
-
-if (!isset($_GET["sortby"]))
+$flip = !isset($_GET["sortby"]);
+if ($flip)
 	$sortBy = "rank";
 else
 	$sortBy = $_GET["sortby"];
+
 switch (strtolower($sortBy)) {
 	case "name":
 		$sortBy = "char_name";
@@ -38,13 +40,12 @@ switch (strtolower($sortBy)) {
 		$sortBy = "rank";
 }
 
-$link = sql_connect();
+$sql = SQL::getConnection();
 
 // Status timestamp
-$result = sql_query($link, "SELECT time_datetime FROM myrunuo_timestamps WHERE time_type='Char'");
-if (!(list($timestamp) = mysql_fetch_row($result)))
-	$timestamp = "";
-mysql_free_result($result);
+$result = $sql->query("SELECT time_datetime FROM myrunuo_timestamps WHERE time_type='Char'");
+$row = $result->fetch_assoc();
+$timestamp = $row["time_datetime"];
 
 $nflip = $cflip = $kflip = $fflip = $lflip = $gflip = 0;
 if (!$flip) {
@@ -62,24 +63,16 @@ if (!$flip) {
 		$gflip = 1;
 }
 // Get total online player count
-$result = sql_query($link, "SELECT COUNT(*) FROM myrunuo_characters");
-if (!$result) {
-	echo "Database error.<br>\n";
-	exit;
-}
-list($totalplayers) = mysql_fetch_row($result);
-mysql_free_result($result);
+$result = $sql->query("SELECT COUNT(*) FROM myrunuo_characters");
+$row = $result->fetch_assoc();
+$totalPlayers = $row["COUNT(*)"];
 
 // Get status and total online players (non-staff)
-/*$result = sql_query($link, "SELECT myrunuo_status.char_id,char_karma,char_fame,char_name,char_nototitle,char_counts,char_public,rank,level,wins,losses
-                    FROM myrunuo_status
-                    LEFT JOIN myrunuo_characters ON myrunuo_characters.char_id=myrunuo_status.char_id
-                    WHERE char_name<>''
-                    ORDER BY $sortBy $sw LIMIT $tp,$status_perpage");*/
-$result = sql_query($link, "SELECT char_name, rank, level, wins, losses, char_id, char_guild, myrunuo_guilds.guild_abbreviation
+$result = $sql->query("
+			SELECT char_name, rank, level, wins, losses, char_id, char_guild, myrunuo_guilds.guild_abbreviation
 			FROM myrunuo_characters
 			LEFT JOIN myrunuo_guilds ON myrunuo_characters.char_guild = myrunuo_guilds.guild_id
-                    ORDER BY $sortBy $sw LIMIT $tp,$status_perpage");
+			ORDER BY $sortBy $sw LIMIT $currentPage, " . SQL::STATUSPERPAGE);
 
 echo <<<EOF
 <!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -140,7 +133,7 @@ echo <<<EOF
 	<tr> 
 		<td class="section-ml"></td> 
 		<td class="section-mm">
-<!-- <font face="Verdana" size="2">Online players: $totalplayers<br></font> -->
+<!-- <font face="Verdana" size="2">Online players: $totalPlayers<br></font> -->
 <!--<table width="640">
   <tr bgcolor="#32605e">
      <td align="center" width="50">
@@ -176,19 +169,19 @@ echo <<<EOF
 
 EOF;
 
-if ($tp - $status_perpage >= 0) {
-	$num = $tp - $status_perpage;
+if ($currentPage - SQL::STATUSPERPAGE >= 0) {
+	$num = $currentPage - SQL::STATUSPERPAGE;
 	echo "        <a href=\"dueling.php?tp=$num&sortby=$s\"><img src=\"images/items/back.jpg\" border=\"0\"></a>\n";
 } else
 	//echo "        &nbsp; &nbsp;";
 
-	$page = intval($tp / $status_perpage) + 1;
-$pages = ceil($totalplayers / $status_perpage);
+	$page = intval($currentPage / SQL::STATUSPERPAGE) + 1;
+$pages = ceil($totalPlayers / SQL::STATUSPERPAGE);
 if ($pages > 1)
 	echo " <font size=\"-1\" face=\"Verdana\">Page [$page/$pages]</font> ";
 
-if ($tp + $status_perpage < $totalplayers) {
-	$num = $tp + $status_perpage;
+if ($currentPage + SQL::STATUSPERPAGE < $totalPlayers) {
+	$num = $currentPage + SQL::STATUSPERPAGE;
 	echo "        <a href=\"dueling.php?tp=$num&sortby=$s\"><img src=\"images/items/next.jpg\" border=\"0\"></a>\n";
 }
 
@@ -213,40 +206,46 @@ function addOrdinalNumberSuffix($num) {
 	}
 	return $num . 'th';
 }
+// Get status and total online players (non-staff)
+$result = $sql->query("
+			SELECT char_name, rank, level, wins, losses, char_id, char_guild, myrunuo_guilds.guild_abbreviation
+			FROM myrunuo_characters
+			LEFT JOIN myrunuo_guilds ON myrunuo_characters.char_guild = myrunuo_guilds.guild_id
+			ORDER BY $sortBy $sw LIMIT $currentPage, " . SQL::STATUSPERPAGE);
 
-if ($totalplayers) {
-	while ($row = mysql_fetch_row($result)) {
-		$charname = $row[0];
-		$rank = $row[1];
-		$level = $row[2];
-		$wins = $row[3];
-		$losses = $row[4];
-		$id = $row[5];
-		$guildid = $row[6];
-		$guild = $row[7];
+if ($totalPlayers) {
+	while ($row = $result->fetch_assoc()) {
+		$charName = $row["char_name"];
+		$rank = $row["rank"];
+		$level = $row["level"];
+		$wins = $row["wins"];
+		$losses = $row["losses"];
+		$charId = $row["char_id"];
+		$guildId = $row["char_guild"];
+		$guildName = $row["guild_abbreviation"];
 
 
-		if ($guildid >= 1 && $guild == "")
-			$guild = "[none]";
-		else if ($guildid >= 1)
-			$guild = "[" . $guild . "]";
+		if ($guildId >= 1 && $guildName == "")
+			$guildName = "[none]";
+		else if ($guildId >= 1)
+			$guildName = "[" . $guildName . "]";
 
-		$ordinalrank = addOrdinalNumberSuffix($rank);
+		$ordinalRank = addOrdinalNumberSuffix($rank);
 
-		if ($charname != "") {
+		if ($charName != "") {
 			echo <<<EOF
   <tr>
     <td>
-      <font face="Verdana" size="2">$ordinalrank</font>
+      <font face="Verdana" size="2">$ordinalRank</font>
     </td>
     <td>
       <font face="Verdana" size="2"><center>$level</center></font>
     </td>
     <td align="right">
-      <font face="Verdana" size="2"><center><a href="guild.php?id=$guildid">$guild</a></center></font>
+      <font face="Verdana" size="2"><center><a href="guild.php?id=$guildId">$guildName</a></center></font>
     </td>
     <td align="left">
-      <font face="Verdana" size="2"><a href="player.php?id=$id">$charname</a></font>
+      <font face="Verdana" size="2"><a href="player.php?id=$charId">$charName</a></font>
     </td>
     <td align="right">
       <font face="Verdana" size="2"><center>$wins</center></font>
@@ -272,9 +271,6 @@ if (!$num) {
 
 EOF;
 }
-
-mysql_free_result($result);
-mysql_close($link);
 
 if ($timestamp != "")
 	$dt = date("F j, Y, g:i a", strtotime($timestamp));
